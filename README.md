@@ -68,7 +68,7 @@ readnvme --nvme 0
 This command displays NVMe information to the console and logs it to a couple of files.  The console output is
 logged to readnvme.log and the detailed NVMe information is logged to nvme.info.json.
 
-[Example nvme.info.json](https://github.com/jtjones1001/nvmetools/blob/e96146300f880d9544f0475799312abedf13fe9a/src/nvmetools/resources/documentation/readnvme/nvme.info.json)
+[Example nvme.info.json](https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme/nvme.info.json)
 
 By default, only a subset of NVMe parameters are displayed to the console.  All parameters can be displayed
 with the -all parameter.  The raw hex data from the commands can be displayed with the --hex parameter.
@@ -727,7 +727,7 @@ checknvme  --nvme 0
 
 This command displays detailed results to the console and creates a summary PDF report:
 
-[Example report: nvme_health_check.pdf](https://github.com/jtjones1001/nvmetools/blob/e96146300f880d9544f0475799312abedf13fe9a/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf)
+[Example report: nvme_health_check.pdf](https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf)
 
 <br/>
 
@@ -748,7 +748,7 @@ this release.  These examples provide an idea of how this package can be expande
   * Fully automated integration test suite using nvmetools and fio. This test suite runs several functional
   and performance tests and then creates a PDF test summary report.  Below is an example report.
 
-    [Test Report for WDC 250GB on Fedora 35](https://github.com/jtjones1001/nvmetools/blob/e96146300f880d9544f0475799312abedf13fe9a/src/nvmetools/resources/documentation/nvme_test.pdf)
+    [Test Report for WDC 250GB on Fedora 35](https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/nvme_test.pdf)
 
 
   * Integration with the TestRail test database system. The TestRail website is used to start the above

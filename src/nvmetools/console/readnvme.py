@@ -40,9 +40,9 @@ Command Line Parameters
         readnvme  --nvme 0 --all
         readnvme  --nvme 0 --hex
 
-    * `Example console output (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/5cd5d0dde328ddb917965d477fb852b7b29e798f/src/nvmetools/resources/documentation/readnvme/readnvme.log>`_
-    * `Example console output with --all (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/5cd5d0dde328ddb917965d477fb852b7b29e798f/src/nvmetools/resources/documentation/readnvme_all/readnvme.log>`_
-    * `Example console output with --hex (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/5cd5d0dde328ddb917965d477fb852b7b29e798f/src/nvmetools/resources/documentation/readnvme_hex/readnvme.log>`_
+    * `Example console output (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme/readnvme.log>`_
+    * `Example console output with --all (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_all/readnvme.log>`_
+    * `Example console output with --hex (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_hex/readnvme.log>`_
 
 """  # noqa: E501
 import argparse
