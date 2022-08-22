@@ -15,7 +15,7 @@ autodoc_mock_imports = ['numpy','psutil','matplotlib','cycler','reportlab']
 project = 'nvmetools'
 copyright = '2022, Joe Jones'
 author = 'Joe Jones'
-version = '0.2.0'
+version = '0.2.1'
 release = version
 
 # -- General configuration ---------------------------------------------------
