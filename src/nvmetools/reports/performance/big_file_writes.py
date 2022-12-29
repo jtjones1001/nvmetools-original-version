@@ -48,7 +48,6 @@ def report(report, test_result):
     )
     report.add_bigfile_write_plot(step_directory, data["file size"])
 
-    report.add_pagebreak()
     report.add_subheading2("Burst Writes")
     step_directory = os.path.join(test_dir, "4_burst_writes")
     report.add_paragraph(

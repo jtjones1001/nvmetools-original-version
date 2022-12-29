@@ -64,7 +64,9 @@ def report(report, test_result):
     ]
     report.add_table(table_rows, [240, 75, 75])
 
-    report.add_paragraph("This histogram shows the distribution of Admin Command latencies for all command types.")
+    report.add_paragraph(
+        "<br/><br/>This histogram shows the distribution of Admin Command latencies for all command types."
+    )
     report.add_histogram(cmd_times)
     report.add_pagebreak()
     report.add_paragraph(

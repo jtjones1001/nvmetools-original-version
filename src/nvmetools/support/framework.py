@@ -5,7 +5,6 @@
 
 The framework consists of Test Suites, Test Cases, Test Steps, and Requirement Verifications.
 """
-import copy
 import datetime
 import glob
 import inspect
@@ -130,10 +129,11 @@ class TestStep:
         pass_vers = sum(ver["result"] is PASSED for ver in self.state["verifications"])
         fail_vers = sum(ver["result"] is not PASSED for ver in self.state["verifications"])
 
-        if fail_vers != 0:
-            log.important("")
-        elif pass_vers != 0:
-            log.verbose("")
+        if self.suite.loglevel > 1:
+            if fail_vers != 0:
+                log.important("")
+            elif pass_vers != 0:
+                log.verbose("")
 
         # End normally
 
@@ -290,6 +290,8 @@ class TestCase:
         with open(results_file, "w", encoding="utf-8") as file_object:
             json.dump(self.state, file_object, ensure_ascii=False, indent=4)
 
+        if self.suite.loglevel == 1:
+            log.info("")
         log.verbose(f"End Time    : {self.state['end time']} ")
         log.info(f"Duration    : {self.state['duration (sec)']} seconds")
         log.info(
@@ -516,7 +518,7 @@ class TestSuite:
         self.update_summary()
 
         if self.loglevel == 0:
-            log.info("")
+            log.important("")
 
         log.important(f" End Time     : {self.state['end time'] }", indent=False)
         log.important(f" Duration     : {self.state['duration (sec)']} seconds", indent=False)
@@ -590,6 +592,7 @@ class TestSuite:
             log.info("")
             super().__init__("TestSuite.Stop")
 
+
 def update_suite_summary(state):
 
     # clear summary
@@ -646,6 +649,7 @@ def update_suite_summary(state):
             state["result"] = FAILED
 
     return state
+
 
 def update_suite_files(directory="."):
     """Update Test Suite after results files updated.
@@ -821,18 +825,18 @@ def verification(rqmt_id, step, title, verified, value):
             rqmts.no_prior_selftest_failures(step, info)
     """
     frames = inspect.getouterframes(inspect.currentframe(), context=1)
-    log.debug(f"Verification {frames[1].function} called from {frames[2].filename} line {frames[2].lineno}")
+    log.debug(f"  Verification {frames[1].function} called from {frames[2].filename} line {frames[2].lineno}")
+
+    # must update verification number in test suite directly
+
+    step.suite.state["summary"]["verifications"]["total"] += 1
+    ver_number = step.suite.state["summary"]["verifications"]["total"]
 
     if verified:
         log.verbose(f"  PASS #{ver_number} : {title} [value: {value}]")
     else:
         log.info(f"------> FAIL #{ver_number} : {title} [value: {value}]", indent=False)
 
-    # must update verification number in test suite directly
-
-    step.suite.state["summary"]["verifications"]["total"] += 1
-
-    ver_number = step.suite.state["summary"]["verifications"]["total"]
     state = {
         "number": ver_number,
         "id": rqmt_id,

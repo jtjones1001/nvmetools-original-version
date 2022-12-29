@@ -263,6 +263,8 @@ def smart_write_data(step, value, limit):
 
 def idle_temperature_delta(step, value):
 
+    value = abs(value)
+
     verification(
         rqmt_id=29,
         step=step,

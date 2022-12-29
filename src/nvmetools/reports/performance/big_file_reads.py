@@ -56,7 +56,7 @@ def report(report, test_result):
         visibility of outliers. """
     )
     report.add_histogram(cmd_times, xlabel="Latency (uS)", log=True)
-    report.add_pagebreak()
+
     report.add_subheading2("Random Reads")
     step_directory = os.path.join(test_dir, "6_sample_info")
     report.add_paragraph(

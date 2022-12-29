@@ -68,12 +68,10 @@ def dev(args):
         # Selftests
 
         tests.short_selftest(suite)
- 
 
         # Performance tests
 
         tests.short_burst_performance(suite)
- 
 
         tests.aspm_latency(suite)
         tests.nonop_power_times(suite)
@@ -87,7 +85,6 @@ def dev(args):
         tests.big_file_reads(suite)
 
         tests.short_burst_performance_full(suite)
-   
 
         # Stress tests
 
@@ -97,6 +94,7 @@ def dev(args):
         tests.temperature_cycle_stress(suite)
 
         tests.suite_end_info(suite, info)
+
 
 def funct(args):
     """Long test suite to verify functionality.
