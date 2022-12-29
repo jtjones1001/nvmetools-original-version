@@ -45,9 +45,9 @@ import logging
 import os
 import sys
 
-from nvmetools.apps.nvmecmd import check_nvmecmd_permissions
-from nvmetools.info import Info
-from nvmetools.support.exit import exit_on_exception
+
+from nvmetools.support.console import exit_on_exception
+from nvmetools.support.info import Info
 from nvmetools.support.log import start_logger
 
 
@@ -56,8 +56,6 @@ def main() -> None:
     try:
         directory = os.path.join(os.path.abspath("."))
         log = start_logger(directory, logging.INFO, "listnvme.log")
-
-        check_nvmecmd_permissions()
 
         info = Info(nvme="*", directory=directory)
 

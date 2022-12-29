@@ -22,7 +22,7 @@ BYTES_IN_MIB = 1024 * 1024
 BYTES_IN_GIB = 1024 * 1024 * 1024
 BYTES_IN_TIB = 1024 * 1024 * 1024 * 1024
 
-KIB_TO_GB = 1024 / 1000 * 1000 * 1000
+KIB_TO_GB = 1024 / (1000 * 1000 * 1000)
 
 GB_IN_TB = 1e3
 
@@ -56,6 +56,15 @@ def as_datetime(timestamp: str) -> datetime:
     return datetime.datetime.strptime(stamp, "%Y-%m-%d %H:%M:%S.%f")
 
 
+def as_duration(seconds: float) -> str:
+    """Convert seconds into a date time string."""
+    hours = int(seconds / 3600)
+    minutes = int((seconds - hours * 3600) / 60)
+    seconds = seconds - hours * 3600 - minutes * 60
+
+    return f"{hours:02}:{minutes:02}:{seconds:06.3f}"
+
+
 def as_io(description: str) -> dict:
     """Convert string into a dictionar of IO payload parameters."""
     try:
@@ -82,6 +91,10 @@ def as_io(description: str) -> dict:
 
 def as_int(string_value: str) -> int:
     """Convert string to int, removes commas and units."""
+    if type(string_value) == int:
+        return string_value
+    if type(string_value) == float:
+        return int(string_value)
     tmp_string = string_value.replace(",", "")
     if tmp_string.rfind(" ") != -1:
         tmp_string = tmp_string[: tmp_string.rfind(" ")]
@@ -90,6 +103,11 @@ def as_int(string_value: str) -> int:
 
 def as_float(string_value: str) -> float:
     """Convert string to float, removes commas and units."""
+    if type(string_value) == float:
+        return string_value
+    if type(string_value) == int:
+        return float(string_value)
+
     tmp_string = string_value.replace(",", "")
     if tmp_string.rfind(" ") != -1:
         tmp_string = tmp_string[: tmp_string.rfind(" ")]

@@ -8,13 +8,15 @@ import os
 import platform
 import sys
 
-from nvmetools import __brandname__, __copyright__, __name__, __version__, __website__
+from nvmetools import __brandname__, __copyright__, __package_name__, __version__, __website__
 
 import psutil
 
-
+IMPORTANT = 25
 VERBOSE = 15
+
 logging.VERBOSE = VERBOSE
+logging.IMPORTANT = IMPORTANT
 
 
 class _DebugLogger(logging.Logger):
@@ -28,13 +30,13 @@ class _DebugLogger(logging.Logger):
             self._log(logging.DEBUG, msg, args, **kwargs)
 
     def verbose(self, msg: str, indent: bool = True, *args: any, **kwargs: any) -> None:
-        if self.isEnabledFor(VERBOSE):
+        if self.isEnabledFor(logging.VERBOSE):
             if indent:
                 msg = "       " + msg
             else:
                 msg = " " + msg
 
-            self._log(VERBOSE, msg, args, **kwargs)
+            self._log(logging.VERBOSE, msg, args, **kwargs)
 
     def info(self, msg: str, indent: bool = True, *args: any, **kwargs: any) -> None:
 
@@ -46,10 +48,20 @@ class _DebugLogger(logging.Logger):
 
             self._log(logging.INFO, msg, args, **kwargs)
 
+    def important(self, msg: str, indent: bool = True, *args: any, **kwargs: any) -> None:
+        if self.isEnabledFor(logging.IMPORTANT):
+            if indent:
+                msg = "       " + msg
+            else:
+                msg = " " + msg
+
+            self._log(logging.IMPORTANT, msg, args, **kwargs)
+
     def banner(self) -> None:
         epic_banner = f"{__brandname__}, version {__version__}, {__website__}, {__copyright__}"
         p = psutil.Process(os.getpid())
 
+        self.info("")
         self.info(f"{epic_banner}", indent=False)
         self.verbose("")
         self.verbose(f" Python: {p.exe()}", indent=False)
@@ -60,11 +72,9 @@ class _DebugLogger(logging.Logger):
         self.verbose(f" OS:     {platform.system()} {platform.version()}", indent=False)
         self.info("")
 
-    def frames(self, function: str, frames: list) -> None:
+    def frames(self, function: str, frames: list, indent=True) -> None:
         self.debug(" ")
-        self.debug(
-            f"{function} called from:   {frames[1].function}() in {frames[1].filename} line {frames[1].lineno}"
-        )
+        self.debug(f"{function}() called from {frames[1].filename} line {frames[1].lineno}", indent=indent)
 
     def header(self, title: str, width: int = 90, indent: bool = True) -> None:
         self.info("-" * width, indent=indent)
@@ -72,7 +82,7 @@ class _DebugLogger(logging.Logger):
         self.info("-" * width, indent=indent)
 
 
-def start_logger(directory: str, log_level: int, filename: str = None, debug_log: bool = False) -> logging.Logger:
+def start_logger(directory: str, log_level: int, filename: str = None, debug_log: bool = True) -> logging.Logger:
     """Start the package logger.
 
     This function starts the log file that is used by all other modules.
@@ -87,9 +97,9 @@ def start_logger(directory: str, log_level: int, filename: str = None, debug_log
     os.makedirs(directory, exist_ok=True)
 
     if debug_log:
-        file_handler = logging.FileHandler(os.path.join(directory, "debug.log"), mode="w")
+        file_handler = logging.FileHandler(os.path.join(directory, "trace.log"), mode="w")
         log.addHandler(file_handler)
-        file_handler.setFormatter(logging.Formatter("%(asctime)s [ %(filename)-18s : %(lineno)-4s]  %(message)s"))
+        file_handler.setFormatter(logging.Formatter("[%(asctime)s]  %(message)s"))
         file_handler.setLevel(logging.DEBUG)
 
     if filename is not None:
@@ -104,7 +114,7 @@ def start_logger(directory: str, log_level: int, filename: str = None, debug_log
     return log
 
 
-log = _DebugLogger(__name__)
+log = _DebugLogger(__package_name__)
 
 console_handler = logging.StreamHandler(sys.stdout)
 console_handler.setLevel(logging.INFO)

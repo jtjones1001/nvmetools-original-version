@@ -34,8 +34,6 @@ import os
 import platform
 
 from nvmetools import SRC_DIRECTORY
-from nvmetools.nvme_test import NvmeTest, verify_requirement
-from nvmetools.settings import LINEAR_LIMIT, RqmtId
 from nvmetools.support.conversions import (
     MS_IN_MIN,
     MS_IN_SEC,
@@ -47,6 +45,8 @@ from nvmetools.support.conversions import (
     is_debug,
 )
 from nvmetools.support.process import RunProcess
+
+LINEAR_LIMIT = 0.9
 
 NVMECMD_DIR = os.path.join(SRC_DIRECTORY, "nvmetools", "resources", "nvmecmd")
 
@@ -98,7 +98,7 @@ class NvmecmdPermissionError(Exception):
         self.code = 54
         self.nvmetools = True
         error_msg = " nvmecmd utility does not have permission to access NVMe.\n\n"
-        error_msg += " To give permission run these commands:\n"
+        error_msg += " To give permission run these commands:\n\n"
         error_msg += f"  sudo chmod 777 {NVMECMD_EXEC} \n"
         error_msg += f"  sudo setcap cap_sys_admin,cap_dac_override=ep {NVMECMD_EXEC} \n"
         super().__init__(error_msg)
@@ -308,69 +308,3 @@ class Selftest:
         if not is_debug() and self.data["return code"] == 0:
             tracelog = os.path.join(directory, TRACE_LOG)
             os.remove(tracelog)
-
-    def verify(self, test: NvmeTest) -> int:
-        """Verify result of self-test.
-
-        Args:
-           test (NVMeTest):  NvmeTest instance to update with requirement results.
-        """
-        if self._extended:
-            selftest_type = "Extended"
-        else:
-            selftest_type = "Short"
-
-        failed_verifications = 0
-
-        verify_requirement(
-            RqmtId.EXT_SELFTEST_RESULT if self._extended else RqmtId.SELFTEST_RESULT,
-            name=f"{selftest_type} Self-test result is 0 (no errors)",
-            limit=0,
-            value=self.data["return code"],
-            passed=(int(self.data["return code"]) == 0),
-            test=test,
-        )
-        verify_requirement(
-            RqmtId.EXT_SELFTEST_RUNTIME if self._extended else RqmtId.SELFTEST_RUNTIME,
-            name=f"{selftest_type} Self-test run time less than specified",
-            limit=f"{self.data['runtime limit']} Min",
-            value="N/A" if "logfile" not in self.data else self.data["runtime"],
-            passed=(False if "logfile" not in self.data else (self.data["runtime"] < self.data["runtime limit"])),
-            test=test,
-        )
-        verify_requirement(
-            RqmtId.EXT_SELFTEST_MONOTONICITY if self._extended else RqmtId.SELFTEST_MONOTONICITY,
-            name=f"{selftest_type} Self-test progress is monotonic",
-            limit="Monotonic",
-            value="N/A" if "logfile" not in self.data else self.data["monotonic"],
-            passed=False if "logfile" not in self.data else (self.data["monotonic"] == "Monotonic"),
-            test=test,
-        )
-        verify_requirement(
-            RqmtId.EXT_SELFTEST_LINEARITY if self._extended else RqmtId.SELFTEST_LINEARITY,
-            name=f"{selftest_type} Self-test progress is roughly linear (Coeff > {LINEAR_LIMIT})",
-            limit=LINEAR_LIMIT,
-            value="N/A" if "logfile" not in self.data else self.data["linear"],
-            passed=(False if "logfile" not in self.data else (self.data["linear"] > LINEAR_LIMIT)),
-            test=test,
-        )
-        verify_requirement(
-            RqmtId.EXT_SELFTEST_HOURS if self._extended else RqmtId.SELFTEST_HOURS,
-            name=f"{selftest_type} Self-test Power-On Hours match hours reported in log page 2",
-            limit=(
-                "N/A"
-                if "logfile" not in self.data
-                else f"{self.data['second_last_poh']} - {self.data['last_poh']}",
-            ),
-            value="N/A" if "logfile" not in self.data else self.data["result_poh"],
-            passed=(
-                False
-                if "logfile" not in self.data
-                else (
-                    (self.data["result_poh"] == self.data["last_poh"])
-                    or (self.data["result_poh"] == self.data["second_last_poh"])
-                )
-            ),
-            test=test,
-        )
-        return failed_verifications

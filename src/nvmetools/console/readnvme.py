@@ -50,9 +50,8 @@ import logging
 import os
 import sys
 
-from nvmetools.apps.nvmecmd import check_nvmecmd_permissions
-from nvmetools.info import Info
-from nvmetools.support.exit import exit_on_exception
+from nvmetools.support.console import exit_on_exception
+from nvmetools.support.info import Info
 from nvmetools.support.log import start_logger
 
 
@@ -126,7 +125,6 @@ def read_nvme(
             log_level = logging.VERBOSE
 
         start_logger(directory, log_level, "readnvme.log")
-        check_nvmecmd_permissions()
 
         info = Info(
             nvme=nvme,
@@ -149,7 +147,7 @@ def read_nvme(
         # Create report if specified, only load report module if using it because it's slow
 
         if create_pdf:
-            from nvmetools.report import InfoReport
+            from nvmetools.support.report import InfoReport
 
             report = InfoReport(info)
             report.save()
