@@ -668,8 +668,7 @@ def update_suite_files(directory="."):
         results.json
         dashboard.html
         report.pdf
-        <test #>
-           results.json
+        <test #>   results.json
 
     Args:
         description: Directory containing Test Suite to update

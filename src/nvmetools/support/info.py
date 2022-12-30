@@ -161,14 +161,15 @@ class Info:
                                   description.
             metadata:             Dictionary with metadata such as system data.
             compare:              Dictionary with compare against compare_info.  Contains:
-                                      "static_mismatches": {},
-                                      "counter_decrements": {},
-                                      "deltas": {},
-                                       "static_parameters" : 0,
-                                       "counter_parameters": 0
+                                    "static_mismatches": {},
+                                    "counter_decrements": {},
+                                    "deltas": {},
+                                    "static_parameters" : 0,
+                                    "counter_parameters": 0
             summary:              Dictionary of summary, same as read.summary.json.
 
-        return_code: Number of errors found, if no errors returns 0
+            return_code: Number of errors found, if no errors returns 0
+
         """
         self._nvme = nvme
         self._directory = directory
