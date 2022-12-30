@@ -2,10 +2,11 @@
 # Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 import platform
+import sys
 import time
 
 from nvmetools import TestSuite, tests
-
+from nvmetools.support.conversions import is_admin
 
 def firmware(args):
     """Verify the firmware update process."""
@@ -35,6 +36,10 @@ def health(args):
 
     Short two minute test suite to verify drive is healthy.
     """
+    if platform.system() == "Windows" and not is_admin():
+        print(" This script requires running with admin (root) privileges")
+        sys.exit(1)
+
     with TestSuite("Check NVMe Health", health.__doc__, **args) as suite:
 
         info = tests.suite_start_info(suite)
@@ -147,6 +152,11 @@ def perf(args):
 
 def selftest(args):
     """Short and extended self-test."""
+
+    if platform.system() == "Windows" and not is_admin():
+        print(" This script requires running with admin (root) privileges")
+        sys.exit(1)
+
     with TestSuite("Selftest", selftest.__doc__, **args) as suite:
 
         info = tests.suite_start_info(suite)

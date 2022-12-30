@@ -20,7 +20,7 @@ logging.IMPORTANT = IMPORTANT
 
 
 class _DebugLogger(logging.Logger):
-    def debug(self, msg: str, indent: bool = True, *args: any, **kwargs: any) -> None:
+    def debug(self, msg, indent=True, *args: any, **kwargs: any):
         if self.isEnabledFor(logging.DEBUG):
             if indent:
                 msg = "       " + msg
@@ -29,7 +29,7 @@ class _DebugLogger(logging.Logger):
 
             self._log(logging.DEBUG, msg, args, **kwargs)
 
-    def verbose(self, msg: str, indent: bool = True, *args: any, **kwargs: any) -> None:
+    def verbose(self, msg, indent=True, *args: any, **kwargs: any):
         if self.isEnabledFor(logging.VERBOSE):
             if indent:
                 msg = "       " + msg
@@ -38,7 +38,7 @@ class _DebugLogger(logging.Logger):
 
             self._log(logging.VERBOSE, msg, args, **kwargs)
 
-    def info(self, msg: str, indent: bool = True, *args: any, **kwargs: any) -> None:
+    def info(self, msg, indent=True, *args: any, **kwargs: any):
 
         if self.isEnabledFor(logging.INFO):
             if indent:
@@ -48,7 +48,7 @@ class _DebugLogger(logging.Logger):
 
             self._log(logging.INFO, msg, args, **kwargs)
 
-    def important(self, msg: str, indent: bool = True, *args: any, **kwargs: any) -> None:
+    def important(self, msg, indent=True, *args: any, **kwargs: any):
         if self.isEnabledFor(logging.IMPORTANT):
             if indent:
                 msg = "       " + msg
@@ -57,7 +57,7 @@ class _DebugLogger(logging.Logger):
 
             self._log(logging.IMPORTANT, msg, args, **kwargs)
 
-    def banner(self) -> None:
+    def banner(self):
         epic_banner = f" {__brandname__}, version {__version__}, {__website__}, {__copyright__}"
         p = psutil.Process(os.getpid())
 
@@ -72,17 +72,17 @@ class _DebugLogger(logging.Logger):
         self.verbose(f" OS:     {platform.system()} {platform.version()}", indent=False)
         self.info("")
 
-    def frames(self, function: str, frames: list, indent=True) -> None:
+    def frames(self, function, frames: list, indent=True):
         self.debug(" ")
         self.debug(f"{function}() called from {frames[1].filename} line {frames[1].lineno}", indent=indent)
 
-    def header(self, title: str, width: int = 90, indent: bool = True) -> None:
+    def header(self, title, width=90, indent=True):
         self.info("-" * width, indent=indent)
         self.info(title, indent=indent)
         self.info("-" * width, indent=indent)
 
 
-def start_logger(directory: str, log_level: int, filename: str = None, debug_log: bool = True) -> logging.Logger:
+def start_logger(directory, log_level, filename=None, debug_log=True):
     """Start the package logger.
 
     This function starts the log file that is used by all other modules.

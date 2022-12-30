@@ -51,7 +51,7 @@ from nvmetools.support.info import Info
 from nvmetools.support.log import start_logger
 
 
-def main() -> None:
+def main():
     """List NVMe drives in the system."""
     try:
         directory = os.path.join(os.path.abspath("."))

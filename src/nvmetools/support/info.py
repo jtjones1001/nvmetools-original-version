@@ -22,7 +22,7 @@ FLOAT_COUNTERS = ["Data Read", "Data Written", "Percent Throttled"]
 
 
 class _NvmeMismatch(Exception):
-    def __init__(self, nvme: int, file_nvme: str) -> None:
+    def __init__(self, nvme, file_nvme):
         self.code = 56
         self.nvmetools = True
         super().__init__(f"Info file NVMe: {file_nvme} doesn't match provided NVMe: {nvme}")
@@ -98,17 +98,17 @@ class Info:
 
     def __init__(
         self,
-        nvme: int = 0,
-        directory: str = ".",
-        verbose: bool = False,
-        description: bool = False,
-        cmd_file: str = "read",
+        nvme=0,
+        directory=".",
+        verbose=False,
+        description=False,
+        cmd_file="read",
         compare_info=None,
         from_file=None,
         tbw=None,
         warranty=None,
         client_drive=None,
-    ) -> None:
+    ):
         """Class to read, compare, and verify NVMe information.
 
         Args:
@@ -183,7 +183,7 @@ class Info:
             log.debug(f"Creating instance of Info by reading nvme device {nvme}")
             log.debug("")
             self._nvmecmd = Read(nvme, directory, cmd_file=cmd_file)
-            self.return_code: int = self._nvmecmd.return_code
+            self.return_code = self._nvmecmd.return_code
             self.info = self._nvmecmd.info
             self.summary = self._nvmecmd.summary
             command_times = []
@@ -200,7 +200,7 @@ class Info:
             try:
                 with open(from_file, "r") as file_object:
                     self.info = json.load(file_object)
-                self.return_code: int = 0
+                self.return_code = 0
             except Exception:
                 raise Exception(f"Corrupted or missing nvmecmd file: {from_file}")
 
@@ -370,41 +370,41 @@ class Info:
         else:
             self.compare = {}
 
-    def _as_lat(self, name: str) -> str:
+    def _as_lat(self, name):
         if self.parameters[name] == "Not Reported":
             return " "
         return self.parameters[name].split("(")[0].strip()
 
-    def _as_nop(self, name: str) -> str:
+    def _as_nop(self, name):
         if self.parameters[name] == "True":
             return "Yes"
         return " "
 
-    def _as_pwr(self, name: str) -> str:
+    def _as_pwr(self, name):
         if self.parameters[name] == "Not Reported":
             return " "
         return self.parameters[name].replace("Watts", "W")
 
-    def _as_pwr2(self, name: str) -> str:
+    def _as_pwr2(self, name):
         return self.parameters[name].split("=")[1].strip(")")
 
-    def _list_param(self, name: str, value: str, description: str = "") -> None:
+    def _list_param(self, name, value, description=""):
         if not self._description:
             log.info(f"   {name.strip():50} {value.strip():35}")
         else:
             log.info(f"   {name.strip():50} {value.strip():35}    {description}")
 
-    def _log_header(self, title: str, width: int = 90, indent: int = 2) -> None:
+    def _log_header(self, title, width=90, indent=2):
         log.info(" " * indent + "-" * width)
         log.info(" " * (indent + 1) + title)
         log.info(" " * indent + "-" * width)
 
-    def _log_param(self, name: str) -> None:
+    def _log_param(self, name):
         value = self.parameters[name]
         description = self.info["nvme"]["parameters"][name]["description"]
         self._list_param(name, value, description)
 
-    def _show(self, as_list: bool = False) -> None:
+    def _show(self, as_list=False):
         self._log_header(f"NVME DRIVE {self._nvme}  ({self.parameters['OS Location'].split()[-1]})")
 
         self._list_param(
@@ -426,7 +426,7 @@ class Info:
         self.power(as_list)
         self.pci(as_list)
 
-    def show_all(self, cmd_filter: str = None) -> None:
+    def show_all(self, cmd_filter=None):
         """List all NVMe parameters.
 
         Args:
@@ -444,7 +444,7 @@ class Info:
             if cmd_filter is None or cmd_filter in param:
                 self._log_param(param)
 
-    def errors(self) -> None:
+    def errors(self):
         """Display NVMe error information."""
         log.info("")
         self._log_param("Critical Warnings")
@@ -452,7 +452,7 @@ class Info:
         self._log_param("Number Of Failed Self-Tests")
         self._log_param("Number of Error Information Log Entries")
 
-    def features(self) -> None:
+    def features(self):
         """Display NVMe features."""
         log.info("")
 
@@ -477,7 +477,7 @@ class Info:
         if self.parameters["Volatile Write Cache (VWC)"] == "Supported":
             self._log_param("Volatile Write Cache Enable (WCE)")
 
-    def fw(self) -> None:
+    def fw(self):
         """Display detailed firmware information."""
         log.info("")
 
@@ -501,18 +501,18 @@ class Info:
             for slot in range(1, (1 + number_slots)):
                 self._log_param(f"Firmware Slot {slot} Revision")
 
-    def show_hex(self) -> None:
+    def show_hex(self):
         """Display results from NVMe Admin Commands in hex format."""
         for command in self.info["raw hex data"]:
             self._log_header(command, width=106)
             for line in self.info["raw hex data"][command]:
                 log.info("   " + line)
 
-    def show_list(self) -> None:
+    def show_list(self):
         """Display NVMe information as a list."""
         self._show(as_list=True)
 
-    def namespace(self) -> None:
+    def namespace(self):
         """Display NVMe namespace information."""
         self._log_param("Number of Namespaces (NN)")
         self._log_param("Namespace 1 Size")
@@ -529,7 +529,7 @@ class Info:
             self.info["nvme"]["parameters"]["Namespace 1 Globally Unique Identifier (NGUID)"]["description"],
         )
 
-    def pci(self, as_list: bool = False) -> None:
+    def pci(self, as_list=False):
         """Display PCIe information.
 
         Args:
@@ -574,13 +574,13 @@ class Info:
                 + f"{self.parameters['Root PCI Location']} "
             )
 
-    def _list_states(self, name: str) -> None:
+    def _list_states(self, name):
         log.info("")
         states = int(self.parameters["Number of Power States Support (NPSS)"])
         for state in range(states):
             self._log_param(f"Power State {state} {name}")
 
-    def power(self, as_list: bool = False) -> None:
+    def power(self, as_list=False):
         """Display power information.
 
         Args:
@@ -634,11 +634,11 @@ class Info:
         except Exception:
             self._list_param("Non-Operational Power State Permissive Mode", "Not Supported", "")
 
-    def show(self) -> None:
+    def show(self):
         """Display NVMe information."""
         self._show()
 
-    def smart(self, as_list: bool = False) -> None:
+    def smart(self, as_list=False):
         """Display SMART information.
 
         Args:
@@ -658,7 +658,7 @@ class Info:
         self._log_param("Power Cycles")
         self._log_param("Unsafe Shutdowns")
 
-    def temperature(self, as_list: bool = False) -> None:
+    def temperature(self, as_list=False):
         """Display temperature information.
 
         Args:
@@ -785,13 +785,13 @@ class InfoSamples:
 
     def __init__(
         self,
-        nvme: int = 0,
-        directory: str = ".",
-        samples: int = 1,
-        interval: int = 0,
-        cmd_file: str = "read",
-        wait: bool = True,
-    ) -> None:
+        nvme=0,
+        directory=".",
+        samples=1,
+        interval=0,
+        cmd_file="read",
+        wait=True,
+    ):
         """Class to read multiple samples of NVMe information.
 
         Args:
@@ -884,7 +884,7 @@ class InfoSamples:
         if wait:
             self.wait()
 
-    def _save_admin_times_file(self) -> None:
+    def _save_admin_times_file(self):
         # save admin command execution times into admin_command_times.csv
         self.total_commands = len(self.summary["command times"])
         self.total_command_fails = 0
@@ -958,7 +958,7 @@ class InfoSamples:
             )
         log.verbose("")
 
-    def _save_attributes_file(self) -> None:
+    def _save_attributes_file(self):
         # save SMART attributes to nvme_attributes.csv
         filepath = os.path.join(self._directory, "nvme_attributes.csv")
 
@@ -1021,10 +1021,10 @@ class InfoSamples:
 
         # Assign the class temp attributes
 
-        self.min_temp: str = f"{min(composite_temperature)} C"
-        self.max_temp: str = f"{max(composite_temperature)} C"
+        self.min_temp = f"{min(composite_temperature)} C"
+        self.max_temp = f"{max(composite_temperature)} C"
 
-    def _save_delta_file(self) -> None:
+    def _save_delta_file(self):
         # calculate differences between first and last sample SMART counters and save in sample_delta.csv
 
         start_parameters = self._first_sample.full_parameters  # [nvme"]["parameters"]
@@ -1055,13 +1055,13 @@ class InfoSamples:
                     # Assign class attributes
 
                     if parameter == "Data Read":
-                        self.data_read: str = f"{float(end_value - start_value):.3f} GB"
+                        self.data_read = f"{float(end_value - start_value):.3f} GB"
                     elif parameter == "Data Written":
                         self.data_written = f"{float(end_value - start_value):.3f} GB"
                     elif parameter == "Seconds Throttled":
                         self.time_throttled = f"{int(end_value - start_value)} sec"
 
-    def wait(self) -> None:
+    def wait(self):
         """Wait for samples to be read.
 
         When sampling was started with wait=False and the sampling has not completed, this function
@@ -1097,7 +1097,7 @@ class InfoSamples:
         self._save_attributes_file()
         self._save_admin_times_file()
 
-    def stop(self) -> None:
+    def stop(self):
         """Stop sampling gracefully.
 
         When sampling is started with wait=False and has not completed this method stops sampling gracefully

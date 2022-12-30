@@ -42,21 +42,21 @@ SEC_IN_MIN = 60
 class IllegalIoStringError(Exception):
     """Custom exception to flag illegal IO string."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         """Add error code and indicate custom exception then propagate."""
         self.code = 58
         self.nvmetools = True
         super().__init__("Illegal IO string")
 
 
-def as_datetime(timestamp: str) -> datetime:
+def as_datetime(timestamp):
     """Convert timestamp into a date time string."""
     stamp = timestamp
     stamp = stamp.rstrip(" DST")
     return datetime.datetime.strptime(stamp, "%Y-%m-%d %H:%M:%S.%f")
 
 
-def as_duration(seconds: float) -> str:
+def as_duration(seconds):
     """Convert seconds into a date time string."""
     hours = int(seconds / 3600)
     minutes = int((seconds - hours * 3600) / 60)
@@ -65,7 +65,7 @@ def as_duration(seconds: float) -> str:
     return f"{hours:02}:{minutes:02}:{seconds:06.3f}"
 
 
-def as_io(description: str) -> dict:
+def as_io(description):
     """Convert string into a dictionar of IO payload parameters."""
     try:
         io = {}
@@ -89,7 +89,7 @@ def as_io(description: str) -> dict:
         raise IllegalIoStringError
 
 
-def as_int(string_value: str) -> int:
+def as_int(string_value):
     """Convert string to int, removes commas and units."""
     if type(string_value) == int:
         return string_value
@@ -101,7 +101,7 @@ def as_int(string_value: str) -> int:
     return int(tmp_string)
 
 
-def as_float(string_value: str) -> float:
+def as_float(string_value):
     """Convert string to float, removes commas and units."""
     if type(string_value) == float:
         return string_value
@@ -114,7 +114,7 @@ def as_float(string_value: str) -> float:
     return float(tmp_string)
 
 
-def as_linear(elapsed_time: list[float], elapsed_progress: list[float]) -> float:
+def as_linear(elapsed_time, elapsed_progress):
     """Convert time and progress series to linear coefficient."""
     # Pearson coefficient undefined for constant series so return 0 if
     # the progress doesn't change
@@ -124,7 +124,7 @@ def as_linear(elapsed_time: list[float], elapsed_progress: list[float]) -> float
         return numpy.corrcoef(elapsed_time, elapsed_progress)[0, 1]
 
 
-def as_monotonic(elapsed_time: list[float]) -> str:
+def as_monotonic(elapsed_time):
     """Convert time series to string indicating monotonicity."""
     diff_time = numpy.diff(elapsed_time)
     if numpy.all(diff_time <= 0) or numpy.all(diff_time >= 0):
@@ -133,12 +133,12 @@ def as_monotonic(elapsed_time: list[float]) -> str:
         return "NOT Monotonic"
 
 
-def as_nicedate(timedate: datetime) -> str:
+def as_nicedate(timedate: datetime):
     """Convert time to string with nice formatting."""
     return timedate.strftime("%B %d, %Y at %H:%M:%S")
 
 
-def is_admin() -> bool:
+def is_admin():
     """Return boolean to indicate running with admin privilege."""
     try:
         return os.getuid() == 0
@@ -146,6 +146,6 @@ def is_admin() -> bool:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
 
 
-def is_debug() -> bool:
+def is_debug():
     """Return boolean to indicate running in debug mode."""
     return log.handlers[0].level == logging.DEBUG

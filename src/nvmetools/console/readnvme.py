@@ -55,7 +55,7 @@ from nvmetools.support.info import Info
 from nvmetools.support.log import start_logger
 
 
-def _parse_arguments() -> None:
+def _parse_arguments():
     """Parse input arguments from command line."""
     parser = argparse.ArgumentParser(
         description=read_nvme.__doc__,
@@ -75,15 +75,15 @@ def _parse_arguments() -> None:
 
 
 def read_nvme(
-    nvme: int = 0,
-    as_list: bool = False,
-    as_hex: bool = False,
-    as_all: bool = False,
-    describe: bool = False,
-    create_pdf: bool = False,
-    verbose: bool = False,
-    debug: bool = False,
-) -> None:
+    nvme=0,
+    as_list=False,
+    as_hex=False,
+    as_all=False,
+    describe=False,
+    create_pdf=False,
+    verbose=False,
+    debug=False,
+):
     """Read and display NVMe information.
 
     Reads NVMe information using the nvmecmd utility. This utility creates a file named
@@ -158,7 +158,7 @@ def read_nvme(
         exit_on_exception(e)
 
 
-def main() -> None:
+def main():
     """Allow command line operation with unique arguments."""
     args = _parse_arguments()
     read_nvme(**args)

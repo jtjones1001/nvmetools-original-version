@@ -7,7 +7,7 @@ import nvmetools.suites as suites
 import nvmetools.support.console as console
 
 
-def main() -> None:
+def main():
     try:
         parser = argparse.ArgumentParser(
             description="Run NVMe Test Suite",

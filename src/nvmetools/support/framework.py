@@ -15,9 +15,10 @@ import platform
 import shutil
 import time
 
+
 from nvmetools import DEFAULT_INFO_DIRECTORY, TEST_SUITE_DIRECTORY, USER_INFO_DIRECTORY, __version__
 from nvmetools.apps.nvmecmd import check_nvmecmd_permissions
-from nvmetools.support.conversions import as_duration
+from nvmetools.support.conversions import as_duration, is_admin
 from nvmetools.support.log import start_logger
 from nvmetools.support.report import create_reports
 
@@ -796,7 +797,7 @@ def verification(rqmt_id, step, title, verified, value):
         rqmt_id: Unique integer ID that identifies the requirement
         step:  The parent TestStep instance
         title: Title of the requirement
-        verified: Boolean, True if the requirement passes verification
+        verifiedean, True if the requirement passes verification
         value:  Value to be reported as the result
 
     .. code-block::

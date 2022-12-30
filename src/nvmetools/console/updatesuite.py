@@ -7,7 +7,7 @@ from nvmetools.support.console import exit_on_exception
 from nvmetools.support.framework import update_suite_files
 
 
-def main() -> None:
+def main():
 
     try:
         parser = argparse.ArgumentParser(

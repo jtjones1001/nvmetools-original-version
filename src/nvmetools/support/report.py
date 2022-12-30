@@ -96,26 +96,26 @@ class InfoReport:
 
     __DEFAULT_REPORT_NAME = "readnvme.pdf"
 
-    def __init__(self, info: Info) -> None:
+    def __init__(self, info: Info):
         """Initialize the report but don't create the file.
 
         Args:
            info : The NVMe information to summarize in the PDF file.
         """
-        self.filepath: str = os.path.join(".", InfoReport.__DEFAULT_REPORT_NAME)
+        self.filepath = os.path.join(".", InfoReport.__DEFAULT_REPORT_NAME)
         self._elements: list = []
-        self._start_info: dict = {"parameters": info.parameters, "full_parameters": info.full_parameters}
+        self._start_info = {"parameters": info.parameters, "full_parameters": info.full_parameters}
 
         self.add_info()
 
-    def _get_value(self, parameter: str) -> str:
+    def _get_value(self, parameter):
         """Get NVMe parameter from the ["nvme"]["parameters"] section."""
         if parameter in self._start_info["full_parameters"]:
             return self._start_info["full_parameters"][parameter]["value"]
         else:
             return " "
 
-    def add_heading(self, text: str) -> None:
+    def add_heading(self, text):
         """Add text in heading format with an underline.
 
         Args:
@@ -125,7 +125,7 @@ class InfoReport:
         self._elements.append(Paragraph(f'<a name="{text}"/>' + text.upper(), style=HEADING_STYLE))
         self._elements.append(Heading(text))
 
-    def add_info(self) -> None:
+    def add_info(self):
         """Add NVMe information summary table."""
         self.add_heading("NVMe Information")
         table_data = [
@@ -217,11 +217,11 @@ class InfoReport:
         self.add_pagebreak()
         self.add_smart_attributes()
 
-    def add_pagebreak(self) -> None:
+    def add_pagebreak(self):
         """Add a pagebreak."""
         self._elements.append(PageBreak())
 
-    def add_paragraph(self, text: str) -> None:
+    def add_paragraph(self, text):
         """Add paragraph of text in standard style.
 
         Args:
@@ -229,7 +229,7 @@ class InfoReport:
         """
         self._elements.append(Paragraph(text, style=TEXT_STYLE))
 
-    def add_smart_attributes(self) -> None:
+    def add_smart_attributes(self):
         """Add SMART attributes.
 
         Adds a table that includes the SMART attributes.  If start and end information exists then the
@@ -258,7 +258,7 @@ class InfoReport:
                     table_data.append([parameter, self._get_value(parameter)])
             self.add_table(table_data, [300, 100])
 
-    def add_subheading(self, text: str) -> None:
+    def add_subheading(self, text):
         """Add text in subheading format.
 
         Args:
@@ -266,7 +266,7 @@ class InfoReport:
         """
         self._elements.append(Paragraph(text, style=SUBHEADING_STYLE))
 
-    def add_subheading2(self, text: str) -> None:
+    def add_subheading2(self, text):
         """Add text in subheading2 format.
 
         Args:
@@ -276,13 +276,13 @@ class InfoReport:
 
     def add_table(
         self,
-        rows: list[list[str]],
-        widths: list[int],
-        align: str = "LEFT",
-        start_row: int = 0,
-        bg_color: str = None,
-        fail_fmt: bool = False,
-    ) -> None:
+        rows,
+        widths,
+        align="LEFT",
+        start_row=0,
+        bg_color=None,
+        fail_fmt=False,
+    ):
         """Add generic table.
 
         Args:
@@ -340,7 +340,7 @@ class InfoReport:
         )
         self._elements.append(table)
 
-    def save(self, filepath: str = None) -> None:
+    def save(self, filepath=None):
         """Save the report as a PDF file.
 
         Saves the report as a PDF file.
@@ -364,7 +364,7 @@ class NvmeReport(InfoReport):
     _DEFAULT_DESCRIPTION = "Unknown test suite."
     _LABEL_X = -0.1
 
-    def __init__(self, results_directory: str = "", title: str = "", description: str = "") -> None:
+    def __init__(self, results_directory="", title="", description=""):
         """Class to create PDF report file for NVMe test suite results.
 
         Args:
@@ -531,7 +531,7 @@ class NvmeReport(InfoReport):
             self.add_paragraph('<font color="red">Manual review of test results has not been completed.</font>')
         self.add_pagebreak()
 
-    def _add_drive_parameters(self) -> None:
+    def _add_drive_parameters(self):
         self.add_pagebreak()
         self.add_heading("NVMe Parameters")
         param_table = [["TITLE", "DESCRIPTION", "VALUE"]]
@@ -698,7 +698,7 @@ class NvmeReport(InfoReport):
                     )
                 self.add_table(table_rows, [160, 85, 85, 85, 85])
 
-    def _add_references(self) -> None:
+    def _add_references(self):
         self.add_pagebreak()
         self.add_heading("References")
         self.add_paragraph(
@@ -748,7 +748,7 @@ class NvmeReport(InfoReport):
                 """
         )
 
-    def _add_requirement_summary(self) -> None:
+    def _add_requirement_summary(self):
         self.add_subheading("Requirement Verification Summary")
         self.add_paragraph(
             """A requirement can be verified multiple times within a test suite.  The table below
@@ -766,7 +766,7 @@ class NvmeReport(InfoReport):
             )
         self.add_table(req_table, [380, 60, 60])
 
-    def _add_requirement_table(self, test_data: dict) -> None:
+    def _add_requirement_table(self, test_data):
         if test_data["result"] == SKIPPED or test_data["result"] == ABORTED:
             return
 
@@ -780,7 +780,7 @@ class NvmeReport(InfoReport):
             table_data.append([Paragraph(f"{name}", style=TABLE_TEXT_STYLE), result])
         self.add_table(table_data, [USABLE_WIDTH - 60, 60], fail_fmt=True)
 
-    def _add_verification_table(self, test_data: dict) -> None:
+    def _add_verification_table(self, test_data):
 
         if test_data["result"] == SKIPPED or test_data["result"] == ABORTED:
             return
@@ -809,7 +809,7 @@ class NvmeReport(InfoReport):
                     table_data.append([Paragraph(f"{name}", style=TABLE_TEXT_STYLE), value, result])
                 self.add_table(table_data, [USABLE_WIDTH - 125, 75, 50], fail_fmt=True)
 
-    def _add_summary(self) -> None:
+    def _add_summary(self):
         self.add_pagebreak()
         self.add_heading("Summary")
         self.add_paragraph(f"""{self.overview}""")
@@ -885,7 +885,7 @@ class NvmeReport(InfoReport):
         self._add_system_info()
         self._add_performance_summary()
 
-    def _add_system_info(self) -> None:
+    def _add_system_info(self):
         if "system" in self._start_info["metadata"]:
             system = self._start_info["metadata"]["system"]
             table_data = [
@@ -898,7 +898,7 @@ class NvmeReport(InfoReport):
             ]
             self.add_table(table_data, [200, 200])
 
-    def _add_test_heading(self, test_data: dict) -> None:
+    def _add_test_heading(self, test_data):
         """Add text in test heading format."""
         self.add_pagebreak()
         self.add_heading(f"Test {test_data['number']}: {test_data['title']}")
@@ -922,7 +922,7 @@ class NvmeReport(InfoReport):
                 read_data.append(float(row[5]))
         return time_data, temp_data, write_data, read_data
 
-    def _get_test_report(self, test_data: dict) -> None:
+    def _get_test_report(self, test_data):
         func_name = test_data["title"].replace(" ", "_").lower()
 
         start_exceptions = traceback.format_exception(*sys.exc_info())
@@ -966,7 +966,7 @@ class NvmeReport(InfoReport):
             self.add_description("This test has no pdf report module.")
             self.add_verifications(test_data)
 
-    def _read_test_results(self) -> None:
+    def _read_test_results(self):
         """Read individual test results."""
 
         if self._start_info is None:
@@ -1403,7 +1403,7 @@ class NvmeReport(InfoReport):
         self._elements.append(convert_plot_to_image(fig, ax))
         plt.close("all")
 
-    def add_verifications(self, test_result: dict) -> None:
+    def add_verifications(self, test_result):
         """Add test result summary for the test.
 
         Adds single line to report that indicates if the test failed any requirements.
@@ -1415,7 +1415,7 @@ class NvmeReport(InfoReport):
         self.add_paragraph("This section lists the test steps and requirement verifications.")
         self._add_verification_table(test_result)
 
-    def add_throttle_lines(self, plt: plt) -> None:
+    def add_throttle_lines(self, plt: plt):
         """Add thermal throttle lines to plot.
 
         Adds horizontal lines to a plot indicating the thermal throttle limits of CCTEMP, WCTEMP, TMT2,
@@ -1458,7 +1458,7 @@ class NvmeReport(InfoReport):
                 label="TMT1",
             )
 
-    def save(self, filepath: str = None) -> None:
+    def save(self, filepath=None):
         """Save the report as a PDF file.
 
         Saves the report as a PDF file with a header and footer.

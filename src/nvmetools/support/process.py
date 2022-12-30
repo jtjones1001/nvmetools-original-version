@@ -17,7 +17,7 @@ from nvmetools.support.log import log
 class _ZombieProcess(Exception):
     """nvmetools exception indicating a process could not be killed."""
 
-    def __init__(self, msg: str) -> None:
+    def __init__(self, msg):
         self.code = 59
         self.nvmetools = True
         super().__init__(msg)
@@ -89,7 +89,7 @@ class RunProcess:
         else:
             log.debug(" ")
 
-    def kill(self) -> None:
+    def kill(self):
         """Kill the running process.
 
         Kills the process if still running. If the process does not exit within the
@@ -110,7 +110,7 @@ class RunProcess:
         else:
             log.debug(f"kill process called but process {self.process.pid} was not running")
 
-    def stop(self) -> None:
+    def stop(self):
         """Stop the running process, try gracefully first then kill if necessary.
 
         Attempts to stop the process by sending the CTRL-BREAK signal.  The CTRL-C signal is
@@ -143,7 +143,7 @@ class RunProcess:
         else:
             log.debug(f"Stop process called but process {self.process.pid} was not running")
 
-    def wait(self, timeout_sec: int = None) -> int:
+    def wait(self, timeout_sec=None):
         """Wait for process to exit.
 
         Waits the specified time for the process to exit. If process doesn't exit then

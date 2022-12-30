@@ -68,14 +68,14 @@ NVMECMD_EXT_SELFTEST_CMD = os.path.join(NVMECMD_DIR, "extended-self-test.cmd.jso
 
 
 class _NoNvme(Exception):
-    def __init__(self, nvme: int) -> None:
+    def __init__(self, nvme):
         self.code = 51
         self.nvmetools = True
         super().__init__(f" NVME device {nvme} was not found.")
 
 
 class _NvmecmdBadJson(Exception):
-    def __init__(self, error: Exception, file: str) -> None:
+    def __init__(self, error, file):
         self.code = 52
         self.nvmetools = True
         error_msg = f"{file} @line {error.lineno} @col {error.colno}"
@@ -83,7 +83,7 @@ class _NvmecmdBadJson(Exception):
 
 
 class _NvmecmdException(Exception):
-    def __init__(self, directory: str) -> None:
+    def __init__(self, directory):
         self.code = 53
         self.nvmetools = True
         tracelog = os.path.join(directory, TRACE_LOG)
@@ -93,7 +93,7 @@ class _NvmecmdException(Exception):
 class NvmecmdPermissionError(Exception):
     """Custom exception to indicate nvmecmd missing permission."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         """Initialize exception."""
         self.code = 54
         self.nvmetools = True
@@ -104,7 +104,7 @@ class NvmecmdPermissionError(Exception):
         super().__init__(error_msg)
 
 
-def check_nvmecmd_permissions() -> None:
+def check_nvmecmd_permissions():
     """Check nvmecmd permission to read NVMe device."""
     if "Windows" != platform.system():
         attribute = "security.capability"
@@ -134,20 +134,20 @@ class Read:
 
     def __init__(
         self,
-        nvme: int = 0,
-        directory: str = ".",
-        samples: int = 1,
-        interval: int = 0,
-        cmd_file: str = "read",
-        wait: bool = True,
-    ) -> None:
+        nvme=0,
+        directory=".",
+        samples=1,
+        interval=0,
+        cmd_file="read",
+        wait=True,
+    ):
         """Start reading information.
 
         Args:
            nvme: NVMe device number.
            directory: Directory to log results.
            samples: Number of samples to read.
-           interval: Interval between samples in mS.
+           intervalerval between samples in mS.
            cmd_file: Name of cmd file to use for the read.
            wait:  Waits for read to complete if True.
         """
@@ -182,7 +182,7 @@ class Read:
         if wait:
             self.wait()
 
-    def wait(self) -> int:
+    def wait(self):
         """Wait for information to be ready.
 
         Returns:
@@ -220,7 +220,7 @@ class Read:
 
         return self.return_code
 
-    def stop(self) -> None:
+    def stop(self):
         """Stop reading information gracefully.
 
         Stops the read when doing multiple samples by stopping the nvmecmd process.
@@ -237,7 +237,7 @@ class Selftest:
        data (dictionary): Dictionary of parameters
     """
 
-    def __init__(self, nvme: int, directory: str, extended: bool = False, limit_min: int = 2) -> None:
+    def __init__(self, nvme, directory, extended=False, limit_min=2):
         """Run self-test diagnostic.
 
         Args:

@@ -644,7 +644,7 @@ class TitlePage(Flowable):
     _DESCRIPTION_X_END = 108
     _description_y_start = 8 * 72 - 16
 
-    def __init__(self, drive_info: str, title: str, report_description: str, date: str):
+    def __init__(self, drive_info, title, report_description, date):
         """Initialize the flowable."""
         Flowable.__init__(self)
         self.width = USABLE_WIDTH
