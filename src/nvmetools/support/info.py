@@ -393,9 +393,10 @@ class Info:
         log.info(" " * indent + "-" * width)
 
     def _log_param(self, name):
-        value = self.parameters[name]
-        description = self.info["nvme"]["parameters"][name]["description"]
-        self._list_param(name, value, description)
+        if name in self.parameters:
+            value = self.parameters[name]
+            description = self.info["nvme"]["parameters"][name]["description"]
+            self._list_param(name, value, description)
 
     def _show(self, as_list=False):
         self._log_header(f"NVME DRIVE {self._nvme}  ({self.parameters['OS Location'].split()[-1]})")

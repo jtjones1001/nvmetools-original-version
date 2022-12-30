@@ -15,14 +15,12 @@ these parameters.
 
 Command Line Parameters
     --nvme, -n      Integer NVMe device number, can be found using listnvme.
-    --pdf, -p       Flag to create PDF report.
-    --describe, -d  Display descriptions for each parameter.
+    --verbose, -v   Display additional parameters.
     --all, -a       Display all parameters.
+    --describe, -d  Display descriptions for each parameter.
     --list, -l      Display parameters as a list.
     --hex, -x       Display raw data read as hex format.
-    --run_id, -i    String to use for the results directory name.
-    --verbose, -V   Flag for additional logging, verbose logging.
-    --debug, -D     Flag for maximum logging for debugging.
+    --pdf, -p       Flag to create PDF report.
 
 **Return Value**
 
@@ -69,8 +67,7 @@ def _parse_arguments():
     )
     parser.add_argument("-a", "--all", dest="as_all", help="Display all parameters", action="store_true")
     parser.add_argument("-p", "--pdf", dest="create_pdf", help="Create a pdf report", action="store_true")
-    parser.add_argument("-V", "--verbose", help="Verbose log mode", action="store_true")
-    parser.add_argument("-D", "--debug", help="Debug mode", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Verbose display", action="store_true")
     return vars(parser.parse_args())
 
 
@@ -86,42 +83,25 @@ def read_nvme(
 ):
     """Read and display NVMe information.
 
-    Reads NVMe information using the nvmecmd utility. This utility creates a file named
-    nvme.info.json with the entire set of information. This script reads nvme.info.json
-    and displays some or all of the NVMe information.
+    Reads NVMe information using the nvmecmd utility. This utility creates a file named nvme.info.json
+    with the entire set of information. This script reads nvme.info.json and displays some or all of
+    the NVMe information.
 
-    All parameters are displayed if --all specified.  Parameters are displayed as a list
-    if --list specified.  Parameter descriptions are displayed if --describe specified.
+    Additional parameters are displayed if --verbose is specified.  All parameters are displayed if
+    --all specified.  Parameters are displayed as a list if --list specified.  Parameter descriptions
+    are displayed if --describe specified.
 
     Information is displayed as hex data if --hex specified.  If this option is specified
     these options have no effect: --list, --all, and --description.
 
     The console output is logged to readnvme.log.  If the --pdf option is specified an
-    nvme_info.pdf file is created.  All information is in the json file nvme.info.json.
-
-    Additional logging for debug occurs if --debug or --verbose are specified.  The most
-    logging occurs with the debug option.
-
-    Args:
-        nvme (int): NVMe device number.  Can be found with listnvme.
-        as_hex (bool):  Displays information in hex format if True.
-        as_list (bool):  Displays information as a list if True.
-        as_all (bool):  Displays all parameters if True.
-        describe (bool):  Display parameter descriptions if True.
-        create_pdf (bool): Creates the pdf report if True.
-        verbose (bool):  Displays additional logging if True.
-        debug (bool): Displays all possible logging if True.
-
-    Returns:
-       returns 0 if all tests pass, else returns integer error code
+    readnvme.pdf file is created.  All information is in the json file nvme.info.json.
     """
     try:
         directory = os.path.join(os.path.abspath("."))
         log_level = logging.INFO
 
-        if debug:
-            log_level = logging.DEBUG
-        elif verbose:
+        if verbose:
             log_level = logging.VERBOSE
 
         start_logger(directory, log_level, "readnvme.log")
@@ -148,7 +128,6 @@ def read_nvme(
 
         if create_pdf:
             from nvmetools.support.report import InfoReport
-
             report = InfoReport(info)
             report.save()
 
