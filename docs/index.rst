@@ -49,18 +49,20 @@ This module provides functionality to read information about NVMe drives.
     :members:
 
 
-Modules - NVMe Test Framework
-=============================
+Modules - Test Framework
+========================
 This modules provides classes and functions to test NVMe drives.
 
 .. automodule:: nvmetools.support.framework
     :members:
 
 
+Modules - Test Cases
+====================
+This modules provide Test Cases for NVMe drives.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. automodule:: nvmetools.cases
+    :members:
 
 
 Indices and tables
