@@ -671,7 +671,7 @@ def update_suite_files(directory="."):
         <test #>
            results.json
 
-     Args:
+    Args:
         description: Directory containing Test Suite to update
     """
 
