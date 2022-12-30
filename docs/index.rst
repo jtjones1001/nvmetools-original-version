@@ -36,6 +36,11 @@ checknvme
 ---------
 .. automodule:: nvmetools.console.checknvme
 
+updatesuite
+-----------
+.. automodule:: nvmetools.console.updatesuite
+
+
 
 Modules - Generic
 =================
