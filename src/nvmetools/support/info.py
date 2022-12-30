@@ -157,18 +157,11 @@ class Info:
             parameters:           Dictionary of NVMe parameters where the key is the parameter name \
                                   and the value is the parameter value.
             full_parameters:      Dictionary of NVMe parameters where the key is the parameter name\
-                                  and the value is a dictionary of title, value, compare_type, and
+                                  and the value is a dictionary of title, value, compare_type, and\
                                   description.
             metadata:             Dictionary with metadata such as system data.
-            compare:              Dictionary with compare against compare_info.  Contains:
-                                    "static_mismatches": {},
-                                    "counter_decrements": {},
-                                    "deltas": {},
-                                    "static_parameters" : 0,
-                                    "counter_parameters": 0
+            compare:              Dictionary with compare against compare_info.
             summary:              Dictionary of summary, same as read.summary.json.
-
-            return_code: Number of errors found, if no errors returns 0
 
         """
         self._nvme = nvme
@@ -836,24 +829,6 @@ class InfoSamples:
                                   and the value is a dictionary of title, value, compare_type, and\
                                            self.summary = self._nvmecmd.summary
 
-        # create the summary log fies
-
-        first_sample_file = os.path.join(self._directory, "nvme.info.sample-1.json")
-        self._first_sample = Info(nvme=None, from_file=first_sample_file)
-
-        sample_files = os.path.join(self._directory, "nvme.info.*.json")
-        last_sample_file = sorted(filter(os.path.isfile, glob.glob(sample_files)))[-1]
-        self._last_sample = Info(nvme=None, from_file=last_sample_file)
-
-        self.compare = _compare(self._first_sample, self._last_sample)
-                                  description.
-            compare:              Dictionary with compare against first and last samples.  Contains:
-                                      "static_mismatches": {},
-                                      "counter_decrements": {},
-                                      "deltas": {},
-                                       "static_parameters" : 0,
-                                       "counter_parameters": 0
-            summary:              Dictionary of summary, same as read.summary.json.
         """
         log.debug(f"Reading {samples} samples of nvme device {nvme}")
 
