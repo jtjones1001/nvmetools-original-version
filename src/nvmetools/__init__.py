@@ -24,14 +24,7 @@ firefox view mode
  about:config, pdfjs.defaultZoomValue to page-fit
 
 """
-"""
-ToDo:
-    see if can move this to verification....
 
-    log.frames("timestamp_absolute_accuracy", inspect.getouterframes(inspect.currentframe(), context=1))
-
-
-"""
 import os
 from importlib.metadata import metadata
 
