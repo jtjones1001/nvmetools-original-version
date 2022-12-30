@@ -25,7 +25,7 @@ Console commands
 Console commands are entered directly into the linux terminal or Windows command prompt (CMD).
 
 listnvme
-----------
+--------
 .. automodule:: nvmetools.console.listnvme
 
 readnvme
@@ -45,8 +45,6 @@ Modules - Info
 ==============
 This module provides functionality to read information about NVMe drives.
 
-nvmetools.support.info
-----------------------
 .. automodule:: nvmetools.support.info
     :members:
 
@@ -55,10 +53,9 @@ Modules - NVMe Test Framework
 =============================
 This modules provides classes and functions to test NVMe drives.
 
-nvmetools.support.framework
----------------------------
 .. automodule:: nvmetools.support.framework
     :members:
+
 
 
 .. toctree::
