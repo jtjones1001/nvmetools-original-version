@@ -41,11 +41,9 @@ updatesuite
 .. automodule:: nvmetools.console.updatesuite
 
 
-
-Modules - Generic
-=================
-The modules in this section provide functionality to read information about NVMe drives.  They are
-designed to be imported into higher level python scripts.
+Modules - Info
+==============
+This module provides functionality to read information about NVMe drives.
 
 nvmetools.support.info
 ----------------------
@@ -55,7 +53,7 @@ nvmetools.support.info
 
 Modules - NVMe Test Framework
 =============================
-The modules in this section provide a function to test NVMe drives.
+This modules provides classes and functions to test NVMe drives.
 
 nvmetools.support.framework
 ---------------------------
