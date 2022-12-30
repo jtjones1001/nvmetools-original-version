@@ -119,7 +119,6 @@ class Info:
             from_directory: Read info from this directory if specified.
             cmd_file: Use this nvmecmd command file to read the information.
 
-
         This example reads NVMe 1 information and logs the files to the ./read_info directory.  It then
         displays the firmware and SMART information.
 
@@ -830,9 +829,9 @@ class InfoSamples:
             return_code: Number of errors, if no errors then 0
             time_throttled:  String with time throttled in seconds (e.g. '14 sec')
 
-            first_sample:           Dictionary of NVMe parameters where the key is the parameter name \
+            first_sample: Dictionary of NVMe parameters where the key is the parameter name \
                                   and the value is the parameter value.
-            last_sample:      Dictionary of NVMe parameters where the key is the parameter name\
+            last_sample: Dictionary of NVMe parameters where the key is the parameter name\
                                   and the value is a dictionary of title, value, compare_type, and\
                                            self.summary = self._nvmecmd.summary
 
