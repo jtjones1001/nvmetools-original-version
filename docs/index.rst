@@ -20,54 +20,28 @@ commands to grant nvmecmd access to read NVMe devices.
     sudo chmod 777 <path to nvmecmd>
     sudo setcap cap_sys_admin,cap_dac_override=ep <path to nvmecmd>
 
-Console commands
-================
-Console commands are entered directly into the linux terminal or Windows command prompt (CMD).
 
-listnvme
---------
-.. automodule:: nvmetools.console.listnvme
+.. Hidden TOCs
 
-readnvme
---------
-.. automodule:: nvmetools.console.readnvme
+.. toctree::
+   :caption: Tool User
+   :maxdepth: 2
+   :hidden:
 
-checknvme
----------
-.. automodule:: nvmetools.console.checknvme
+   info_commands
+   test_commands
 
-updatesuite
------------
-.. automodule:: nvmetools.console.updatesuite
+.. toctree::
+    :maxdepth: 2
+    :caption: Test Developer
+    :hidden:
 
-
-Modules - Info
-==============
-This module provides functionality to read information about NVMe drives.
-
-.. automodule:: nvmetools.support.info
-    :members:
+    framework
+    test_suites
+    test_cases
+    test_steps
+    verifications
+    information
 
 
-Modules - Test Framework
-========================
-This modules provides classes and functions to test NVMe drives.
 
-.. automodule:: nvmetools.support.framework
-    :members:
-
-
-Modules - Test Cases
-====================
-This modules provide Test Cases for NVMe drives.
-
-.. automodule:: nvmetools.cases
-    :members:
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

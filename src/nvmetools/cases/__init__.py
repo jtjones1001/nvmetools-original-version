@@ -1,8 +1,6 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""python package of test cases for testing NVMe drives."""
-
 from nvmetools.cases.features.timestamp import timestamp
 from nvmetools.cases.firmware.firmware_activate import firmware_activate
 from nvmetools.cases.firmware.firmware_download import firmware_download

@@ -523,6 +523,7 @@ class NvmeReport(InfoReport):
 
     def _add_debug_summary(self):
         review_file = os.path.join(self._results_directory, "review.txt")
+        self.add_paragraph("")
         if os.path.exists(review_file):
             with open(review_file, "r") as file_object:
                 review_text = file_object.read()

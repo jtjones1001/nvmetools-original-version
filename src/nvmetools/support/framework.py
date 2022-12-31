@@ -1,9 +1,31 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""This module provides classes for a NVMe test framework.
+"""This module provides a framework for testing NVMe devices.
 
-The framework consists of Test Suites, Test Cases, Test Steps, and Requirement Verifications.
+The framework consists of Test Suites, Test Cases, Test Steps, and Requirement Verifications
+structured as follows::
+
+    Test Suite
+        Test Case
+            Test Step
+                Verification
+                Verification
+            Test Step
+                Verification
+        Test Case
+            Test Step
+                Verification
+
+The framework automatically runs a test suite and produces these three outputs:
+
+    * `Detailed text and json logs <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme/readnvme.log>`_
+    * `HTML dashboard  <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_all/readnvme.log>`_
+    * `Detailed report  <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_hex/readnvme.log>`_
+
+Because this framework is command line driven and based on python it can easily be integrated into
+existing automation frameworks, test databases such as TestRail, and log storage servers.
+
 """
 import datetime
 import glob
@@ -35,62 +57,72 @@ class TestStep:
     stop_on_fail = False
     __force_fail = False
 
-    def __init__(self, test, title, description="", *args, **kwargs):
-        """Class to run a Test Step.
+    def __init__(self, test, title, description=""):
+        """Runs a Test Step.
 
-        A Test Step is run within a Test Case which is run within a Test Suite.  A
-        Test Step can contain any number of Verifications. A Test Step fails if any
-        Verification fails.  A Test Step passes if all Verifications pass or there are
-        no Verifications.
+        A Test Step is run within a Test Case which is run within a Test Suite.  A Test Step runs
+        any number of requirement verifications, including zero.
 
-        If the stop_on_fail attribute is True the Step will stop on the first failed verification.
+        A Test Step result is either PASSED or FAILED.  If no verifications failed the Test Step
+        result is PASSED, otherwise it is FAILED.  The one exception if the stop() method is called,
+        see below for details.
+
+        The step is run using the python with command.  This example runs a step with two
+        verifications.  If either verification fails the step result is FAILED.
+
+            .. code-block::
+
+                with TestStep(test, "My step", "Very cool step description") as step:
+
+                    value1, value2 = get_my_values()
+
+                    verify.my_requirement(step, value1)
+                    verify.my_second_requirement(step, value2)
+
+
+        If stop_on_fail is True the step will stop when a verification fails.  This example runs a
+        test step and enables stop on fail for the first verification.
+
+            .. code-block::
+
+                with TestStep(test, "My step", "Very cool step description") as step:
+
+                    value1, value2 = get_my_values()
+
+                    step.stop_on_fail = True
+                    verify.my_requirement(step, value1)
+
+                    step.stop_on_fail = False
+                    verify.my_second_requirement(step, value2)
+
+
+        A step can be stopped using the stop() method.  This example stops a step and sets the result
+        to PASSED or FAILED based on a custom variable.
+
+            .. code-block::
+
+                with TestStep(test, "My step", "Very cool step description") as step:
+
+                    value1, value2 = get_my_values()
+
+                    if value1 == 32:
+                        step.stop(force_fail=False)
+                    else:
+                        step.stop()
 
         Args:
             test: Parent TestCase instance running the step
             title: Title of the step
-            description: Description of the step
-
-        This example runs a test step with one verification that determines pass/fail.
-
-            .. code-block::
-
-                with TestStep("My step", "This is a very cool step description") as step:
-                    rqmts.my_requirement_to_verify(step, value, limit)
-
-        This example runs a test step and enables stop on fail for the first verification.
-
-            .. code-block::
-
-                with TestStep("My step", "This is a very cool step description") as step:
-
-                    step.stop_on_fail = True
-                    rqmts.my_requirement_to_verify(step, value, limit)
-
-                    step.stop_on_fail = False
-                    rqmts.my_other_requirement_to_verify(step, value, limit)
-                    rqmts.my_last_requirement_to_verify(step, value, limit)
-
-        This example runs a test step and passes or fails based on a custom variable.
-
-            .. code-block::
-
-                with TestStep("My step", "This is a very cool step description") as step:
-
-                    if myvalue == "PASS":
-                        step.stop(fail=False)
-                    else:
-                        step.stop()
+            description: Optional description for the step
 
         Attributes:
-            directory:      Working directory
-            suite           Grandparent TestSuite instance running the test
-            step_number     Step number within the test
-            stop_on_fail    If true the step will stop on a failure
-            test            Parent TestCase instance running the step
-        """
-        for item in kwargs.items():
-            self.__setattr__(item[0], item[1])
+            test:            Parent TestCase instance running the test step
+            suite:           Grandparent TestSuite instance running the test
+            step_number:     Step number within the test
+            directory:       Working directory for step specific files
+            stop_on_fail:    Stops step on a failed verification, default is False
 
+        """
         self._title = title
         self._description = description
         self._start_counter = time.perf_counter()
@@ -170,14 +202,7 @@ class TestStep:
 
         return True
 
-    def stop(self, force_fail=True):
-        """Stop the TestStep."""
-        self.__force_fail = force_fail
-        raise self.Stop
-
-    class Stop(Exception):
-        """Framework exception to stop a Test Step."""
-
+    class __Stop(Exception):
         nvme_framework_exception = True
 
         def __init__(self):
@@ -186,41 +211,106 @@ class TestStep:
             log.info("")
             super().__init__("TestStep.Stop")
 
+    def stop(self, force_fail=True):
+        """Stop the TestStep.
+
+        Stops the step when called.  By default will force the step to fail.  If force_fail=False
+        the step result is determined by the completed verifications up to the point stop() is
+        called.  If any verification failed the step result is failed, otherwise it is passed.
+
+        Args:
+            force_fail: Forces step to fail if True
+
+        """
+        self.__force_fail = force_fail
+        raise self.__Stop
+
+
+
 
 class TestCase:
     stop_on_fail = False
     __force_fail = False
 
-    def __init__(self, suite, title, description="", *args, **kwargs):
-        """Class to run a Test Case.
+    def __init__(self, suite, title, description=""):
+        """Runs a Test Case.
 
-        A Test Case is run within a Test Suite and must contain one or more Test Steps.
+        A Test Case which is run within a Test Suite.  A Test Case runs one or more Test Steps.
 
-        If the stop_on_fail attribute is True the TestCase will stop on the first Test Step.
+        A Test Case result is either PASSED, FAILED, ABORTED, or SKIPPED.  If an unhandled
+        exception occurs during the test the result is ABORTED.  If the skip() method is
+        called the result is SKIPPED.  If not skipped or aborted, if any Test Step fails the result
+        is FAILED, otherwise it is PASSED.
 
-        Args:
-            suite: TestSuite instance that runs the step
-            title: Title of the step
-            description: Description of the step
-
-        This example creates a test step
+        The test is run using the python with command.  This example runs a test with one test step.
 
             .. code-block::
 
-                with TestSuite("My suite", "This is the test suite") as suite:
+                with TestCase(suite, "My test", "Very cool test description") as test:
 
-                    tests.my_test(suite)
-                    tests.my_other_test(suite)
+                    with TestStep(test, "My step", "Very cool step description") as step:
+                        value1, value2 = get_my_values()
+                        verify.my_requirement(step, value1)
+
+
+        If stop_on_fail is True the test will stop when a step fails.  Note the step will complete
+        before the test is stopped.  This example runs a test and enables stop on fail for the
+        first step.
+
+            .. code-block::
+
+                with TestCase(suite, "My test", "Very cool test description") as test:
+
+                    test.stop_on_fail = True
+
+                    with TestStep(test, "My step", "Very cool step description") as step:
+
+                        value1, value2 = get_my_values()
+                        verify.my_requirement(step, value1))
+
+
+        A test can be stopped using the stop() method.  This example stops a test and sets the result
+        to PASSED or FAILED based on a custom variable.
+
+            .. code-block::
+
+                with TestCase(suite, "My test", "Very cool test description") as test:
+
+                    with TestStep(test, "My step", "Very cool step description") as step:
+
+                        value1, value2 = get_my_values()
+                        if value1 == 32:
+                            test.stop(force_fail=False)
+                        else:
+                            test.stop()
+
+
+        A test can be skipped using the skip() method.  This example skips a test if the testable
+        feature is not supported.
+
+            .. code-block::
+
+                with TestCase(suite, "My test", "Very cool test description") as test:
+
+                    with TestStep(test, "Feature support", "Verifies feature is supported") as step:
+
+                        feature_supported = get_feature_support()
+                        if not feature_supported:
+                            test.skip()
+
+
+        Args:
+            suite: Parent TestSuite instance running the test
+            title: Title of the test
+            description: Optional description for the test
 
         Attributes:
-            directory:      Working directory
             suite           Parent TestSuite instance running the test
-            test_number     Test number within the suite
-            stop_on_fail    If true the test will stop on a failure
-        """
-        for item in kwargs.items():
-            self.__setattr__(item[0], item[1])
+            test_number     Test number within the test suite
+            directory       Working directory for step specific files
+            stop_on_fail    Stops step on a failed verification, default is False
 
+        """
         self.data = {}
         self.suite = suite
         self._steps = []
@@ -376,45 +466,85 @@ class TestSuite:
     __force_fail = False
 
     def __init__(self, title, description="", *args, **kwargs):
-        """Class to complete a Test Suite.
+        """Runs a Test Suite.
 
-        The TestSuite is the top level of the NVMe test framework consisting of:
+        A Test Suite runs one or more Test Cases.
 
-            TestSuite
-                TestCase
-                    TestStep
-                        Verification
+        A Test Suite result is either PASSED, FAILED, or ABORTED.  If an unhandled
+        exception occurs during the suite the result is ABORTED.  If not aborted, if any Test Case
+        fails the result is FAILED, otherwise it is PASSED.
 
-        A TestSuite must contain one or more TestCases.
+        The suite is run using the python with command.  This example runs a suite with one test case.
 
-        Logging
+            .. code-block::
 
-        Dashboard
-        PDF Report
+                with TestSuite("My test suite", "Very cool suite.") as suite:
+
+                    with TestCase(suite, "My test", "Very cool test description") as test:
+
+                        with TestStep(test, "My step", "Very cool step description") as step:
+                            value1, value2 = get_my_values()
+                            verify.my_requirement(step, value1)
+
+        In the nvmetools package the test cases are included as a package called tests.
+
+           .. code-block::
+
+                from nvmetools import tests, TestSuite
+
+                with TestSuite("Selftests", "Runs the short and exteself-test.") as suite:
+
+                    tests.short_selftest(suite)
+                    tests.extended_selftest(suite)
+
+
+
+
+        If stop_on_fail is True the test will stop when a step fails.  Note the step will complete
+        before the test is stopped.  This example runs a test and enables stop on fail for the
+        first step.
+
+            .. code-block::
+
+                with TestCase(suite, "My test", "Very cool test description") as test:
+
+                    test.stop_on_fail = True
+
+                    with TestStep(test, "My step", "Very cool step description") as step:
+
+                        value1, value2 = get_my_values()
+                        verify.my_requirement(step, value1))
+
+
+        A test can be stopped using the stop() method.  This example stops a test and sets the result
+        to PASSED or FAILED based on a custom variable.
+
+            .. code-block::
+
+                with TestCase(suite, "My test", "Very cool test description") as test:
+
+                    with TestStep(test, "My step", "Very cool step description") as step:
+
+                        value1, value2 = get_my_values()
+                        if value1 == 32:
+                            test.stop(force_fail=False)
+                        else:
+                            test.stop()
+
 
         Args:
-            title: Title of the step
-            description: Description of the step
+            title: Title of the test
+            description: Optional description for the test
 
-        This example runs a test suite with one test case.
-
-            .. code-block::
-
-                with TestSuite("My suite", "This is the description") as suite:
-                    tests.my_testcase(suite)
-
-        This example runs a test suite with stop on fail for the first test case.
-
-            .. code-block::
-
-                with TestSuite("My suite", "This is the description") as suite:
-                    suite.stop_on_fail = True
-                    tests.my_testcase(suite)
-
-                    suite.stop_on_fail = False
-                    tests.my_lasttest(suite)
+        Attributes:
+            directory       Working directory for step specific files
+            stop_on_fail    Stops step on a failed verification, default is False
+            loglevel        Amount of detail to display, 0 = least, 1 = default, 2 = verbose, and 3 = debug
 
         """
+
+
+
         for item in kwargs.items():
             self.__setattr__(item[0], item[1])
 

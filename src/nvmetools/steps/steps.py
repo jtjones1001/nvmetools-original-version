@@ -6,7 +6,7 @@ from nvmetools.support.conversions import BYTES_IN_GB
 
 
 def test_start_info(test):
-
+    """blah blah blah."""
     with TestStep(
         test, "Test start info", "Read test start info and verify drive not in error state.", stop_on_fail=True
     ) as step:
