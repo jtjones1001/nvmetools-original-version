@@ -4,27 +4,30 @@
 """Test and report framework.
 
 This package uses the following:
-
-   - black formatter with wider line length defined in pyproject.toml
-   - flake8 linter with custom settings defined in setup.cfg
-   - pytest unit tests defined in tests folder
-   - The Google Docstring format.  Style Guide:  http://google.github.io/styleguide/pyguide.html
-   - Sphinx extension: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
+   - black formatter with the wider line length defined in pyproject.toml
+   - flakeheaven linter with custom settings defined in pyproject.toml
 
 To release package to test pypi:
    python3 -m build
    twine check dist/*
    twine upload -r testpypi dist/*
 
-To disable pycache in venv...
+To update the Read The Docs (RTD) documentation (https://readthedocs.org):
+   - update the files in docs directory and RTD will build the documentation when checked into github
+   - Documentation location:  https://nvmetools.readthedocs.io/en/latest/
+   - To test build the documentation sphinx-build -b html docs docs/build/html, then open
+     docs/build/html/index.html in browser
+   - See...
+      - The Google Docstring format.  Style Guide:  http://google.github.io/styleguide/pyguide.html
+      - Sphinx extension: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
+To disable pycache in venv...
    export PYTHONDONTWRITEBYTECODE=1
 
-firefox view mode
- about:config, pdfjs.defaultZoomValue to page-fit
+To change firefox view mode for PDF report:
+   about:config, pdfjs.defaultZoomValue to page-fit
 
 """
-
 import os
 from importlib.metadata import metadata
 

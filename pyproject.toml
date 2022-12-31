@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nvmetools"
-version = "0.3.4"
+version = "0.3.0"
 description = "Basic tools for working with NVMe SSD on Windows or Linux"
 readme = "README.md"
 authors = [{ name = "Joe Jones", email = "joejones@chargetrap.com" }]
@@ -36,7 +36,6 @@ Documentation = "https://nvmetools.readthedocs.io/en/latest/"
 readnvme = "nvmetools.console.readnvme:main"
 checknvme = "nvmetools.console.checknvme:main"
 listnvme = "nvmetools.console.listnvme:main"
-setupnvme = "nvmetools.console.setupnvme:main"
 runsuite = "nvmetools.console.runsuite:main"
 updatesuite = "nvmetools.console.updatesuite:main"
 

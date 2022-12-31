@@ -57,7 +57,7 @@ class TestStep:
     stop_on_fail = False
     __force_fail = False
 
-    def __init__(self, test, title, description=""):
+    def __init__(self, test, title, description="", stop_on_fail=False):
         """Runs a Test Step.
 
         Args:
@@ -124,6 +124,7 @@ class TestStep:
 
         """
         self._title = title
+        self.stop_on_fail = stop_on_fail
         self._description = description
         self._start_counter = time.perf_counter()
         self.test = test
@@ -230,7 +231,7 @@ class TestCase:
     stop_on_fail = False
     __force_fail = False
 
-    def __init__(self, suite, title, description=""):
+    def __init__(self, suite, title, description="", stop_on_fail=False):
         """Runs a Test Case.
 
         Args:
@@ -310,6 +311,7 @@ class TestCase:
         """
         self.data = {}
         self.suite = suite
+        self.stop_on_fail = stop_on_fail
         self._steps = []
         self._start_counter = time.perf_counter()
         self._description = description.split("\n")[0]
