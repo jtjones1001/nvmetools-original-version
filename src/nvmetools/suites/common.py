@@ -36,8 +36,8 @@ def functional(args):
     Args:
         args: dictionary of NVMe parameters passed from testnvme command
 
-    This suite verifies the reliability and performance of the admin commands, SMART attributes,
-    and timestamp.
+    This suite runs Test Cases to verify the admin commands, SMART attrbiutes, timestamp, and
+    short self-test.
 
     """
     with TestSuite("Functional", functional.__doc__, **args) as suite:
@@ -57,6 +57,9 @@ def functional(args):
 def health(args):
     """Verifies drive health and wear with self-test diagnostic and SMART attributes.
 
+    Args:
+        args: dictionary of NVMe parameters passed from testnvme command
+
     Check NVMe is a short Test Suite that verifies drive health and wear by running the drive
     diagnostic, reviewing SMART data and Self-Test history.
     """
@@ -73,6 +76,9 @@ def health(args):
 
 def performance(args):
     """Test suite to measure NVMe IO performance.
+
+    Args:
+        args: dictionary of NVMe parameters passed from testnvme command
 
     Measures IO peformance for several conditions including short and long bursts of reads
     and writes."""
@@ -102,7 +108,13 @@ def performance(args):
 
 
 def selftest(args):
-    """Short and extended self-test."""
+    """Short and extended self-test.
+
+    Args:
+        args: dictionary of NVMe parameters passed from testnvme command
+
+    This suite runs Test Cases to verify the short and extended versions of the self-test.
+    """
 
     if platform.system() == "Windows" and not is_admin():
         print(" This script requires running with admin (root) privileges")
@@ -122,7 +134,13 @@ def selftest(args):
 
 
 def stress(args):
-    """Test suite to verify drive reliaility under IO stress."""
+    """Test suite to verify drive reliaility under IO stress.
+
+    Args:
+        args: dictionary of NVMe parameters passed from testnvme command.
+
+    This suite runs Test Cases to stress the drive in several different ways.
+    """
 
     with TestSuite("Stress", stress.__doc__, **args) as suite:
 

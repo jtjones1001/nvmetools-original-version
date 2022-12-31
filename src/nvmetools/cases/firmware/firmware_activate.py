@@ -10,6 +10,9 @@ def firmware_activate(suite):
     Activates firmware, downloads multiple versions to different slot and constantly
     activates while running IO stress.  Verifies no errors and max laatency in limit.
     No parameter changes.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Firmware activate", firmware_activate.__doc__) as test:
         raise test.Skip

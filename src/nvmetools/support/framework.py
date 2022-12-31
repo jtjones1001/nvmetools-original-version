@@ -303,10 +303,10 @@ class TestCase:
                             test.skip()
 
         Attributes:
-            suite           Parent TestSuite instance running the test
-            test_number     Test number within the test suite
-            directory       Working directory for step specific files
-            stop_on_fail    Stops step on a failed verification, default is False
+            suite:          Parent TestSuite instance running the test
+            test_number:     Test number within the test suite
+            directory:       Working directory for step specific files
+            stop_on_fail:    Stops step on a failed verification, default is False
 
         """
         self.data = {}
@@ -391,7 +391,7 @@ class TestCase:
         log.info("")
         if self.state["result"] == PASSED:
             if self.suite.loglevel == 0:
-                log.important(f"    PASS : TEST {self.suite.test_number} : {self.state['title']}", indent=False)
+                log.important(f"     PASS : TEST {self.suite.test_number} : {self.state['title']}", indent=False)
             else:
                 log.info("TEST PASSED")
                 log.info("")
@@ -410,7 +410,7 @@ class TestCase:
                 log.error(" ")
         else:
             if self.suite.loglevel == 0:
-                log.important(f"--> FAIL : TEST {self.suite.test_number} : {self.state['title']}", indent=False)
+                log.important(f" --> FAIL : TEST {self.suite.test_number} : {self.state['title']}", indent=False)
             else:
                 log.info("----> TEST FAILED", indent=False)
                 log.info("")
@@ -423,22 +423,31 @@ class TestCase:
 
         return True
 
-    def skip(self, force_fail=False):
-        """Skip the TestCase."""
-        self.__force_fail = force_fail
-        raise self.Skip
+    def skip(self, msg=""):
+        """Skip the TestCase.
+
+        Skips the test when called.
+        """
+        raise self.__Skip(msg)
 
     def stop(self, force_fail=True):
-        """Stop the TestCase."""
+        """Stop the TestCase.
+
+        Stops the test when called.  By default will force the test to fail.  If force_fail=False
+        the test result is determined by the completed steps up to the point stop() is
+        called.  If any step failed the test result is failed, otherwise it is passed.
+
+        Args:
+            force_fail: Forces test to fail if True
+
+        """
         self.__force_fail = force_fail
-        raise self.Stop
+        raise self.__Stop
 
     def update_summary(self):
         self.state = update_test_summary(self.state)
 
-    class Skip(Exception):
-        """Framework exception to skip a Test Case."""
-
+    class __Skip(Exception):
         nvme_framework_exception = True
 
         def __init__(self, msg=""):
@@ -447,9 +456,7 @@ class TestCase:
             log.info("")
             super().__init__("TestCase.Skip")
 
-    class Stop(Exception):
-        """Framework exception to stop a Test Case."""
-
+    class __Stop(Exception):
         nvme_framework_exception = True
 
         def __init__(self, msg=""):
@@ -536,9 +543,9 @@ class TestSuite:
 
 
         Attributes:
-            directory       Working directory for step specific files
-            stop_on_fail    Stops step on a failed verification, default is False
-            loglevel        Amount of detail to display, 0 = least, 1 = default, 2 = verbose, and 3 = debug
+            directory:      Working directory for step specific files
+            stop_on_fail:    Stops step on a failed verification, default is False
+            loglevel:        Amount of detail to log, least is 0, most is 3
 
         """
 
@@ -704,17 +711,24 @@ class TestSuite:
         with open(filepath, "r") as file_object:
             self.device = json.load(file_object)
 
-    def stop(self, fail=True):
-        """Stop the TestSuite."""
-        self.__force_fail = fail
-        raise self.Stop
+    def stop(self, force_fail=True):
+        """Stop the TestSuite.
+
+        Stops the suite when called.  By default will force the suite to fail.  If force_fail=False
+        the suite result is determined by the completed tests up to the point stop() is
+        called.  If any test failed the result is failed, otherwise it is passed.
+
+        Args:
+            force_fail: Forces suite to fail if True
+
+        """
+        self.__force_fail = force_fail
+        raise self.__Stop
 
     def update_summary(self):
         self.state = update_suite_summary(self.state)
 
-    class Stop(Exception):
-        """Framework exception to stop a Test Suite."""
-
+    class __Stop(Exception):
         nvme_framework_exception = True
 
         def __init__(self):

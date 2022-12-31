@@ -9,6 +9,9 @@ def firmware_download(suite):
 
     Downloads firmware files to every slot while running IO stress.  Checks max latency during
     download.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Firmware download", firmware_download.__doc__) as test:
         raise test.Skip
