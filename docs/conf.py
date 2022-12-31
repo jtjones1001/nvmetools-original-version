@@ -4,16 +4,8 @@ import sys
 import os
 import re
 
-# Prefer to use the version of the theme in this repo
-# and not the installed version of the theme.
-#sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../src'))
-# sys.path.append(os.path.abspath('./demo/'))
 
-#from sphinx_rtd_theme import __version__ as theme_version
-#from sphinx_rtd_theme import __version_full__ as theme_version_full
-
-#from sphinx.locale import _
 
 autodoc_mock_imports = ['numpy','psutil','matplotlib','cycler','reportlab']
 autoclass_content = "init"
@@ -47,20 +39,6 @@ suppress_warnings = ['image.nonlocal_uri']
 pygments_style = 'default'
 
 
-'''
-if sys.version_info < (3, 0):
-    tags.add("python2")
-else:
-    tags.add("python3")
-
-intersphinx_mapping = {
-    'rtd': ('https://docs.readthedocs.io/en/stable/', None),
-    'rtd-dev': ('https://dev.readthedocs.io/en/stable/', None),
-    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
-}
-'''
-
-
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'logo_only': False,
@@ -71,15 +49,6 @@ html_context = {}
 if not 'READTHEDOCS' in os.environ:
     html_static_path = ['_static/']
     html_js_files = ['debug.js']
-
-    '''
-    # Add fake versions for local QA of the menu
-    html_context['test_versions'] = list(map(
-        lambda x: str(x / 10),
-        range(1, 100)
-    ))
-    '''
-
 
 #html_logo = "_static/nvme_icon.png"
 html_show_sourcelink = True
@@ -97,35 +66,3 @@ man_pages = [
 texinfo_documents = [
   ('index', slug, project, author, slug, project, 'Miscellaneous'),
 ]
-
-'''
-# Extensions to theme docs
-def setup(app):
-    from sphinx.domains.python import PyField
-    from sphinx.util.docfields import Field
-
-    app.add_object_type(
-        'confval',
-        'confval',
-        objname='configuration value',
-        indextemplate='pair: %s; configuration value',
-        doc_field_types=[
-            PyField(
-                'type',
-                label=_('Type'),
-                has_arg=False,
-                names=('type',),
-                bodyrolename='class'
-            ),
-            Field(
-                'default',
-                label=_('Default'),
-                has_arg=False,
-                names=('default',),
-            ),
-        ]
-    )
-
-
-
-'''

@@ -28,7 +28,7 @@ firefox view mode
 import os
 from importlib.metadata import metadata
 
-__copyright__ = "Copyright (C) 2022 Joe Jones"
+__copyright__ = "Copyright (C) 2023 Joe Jones"
 __brandname__ = "EPIC NVMe Utilities"
 __website__ = "www.epicutils.com"
 __package_name__ = "nvmetools"
