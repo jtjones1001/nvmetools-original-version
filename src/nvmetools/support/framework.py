@@ -553,7 +553,7 @@ class TestSuite:
         self.test_number = 0
         self.data = {}
 
-        if self.run_id == "":
+        if self.run_id is None:
             self.uid = f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
         else:
             self.uid = self.run_id

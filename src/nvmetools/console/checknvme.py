@@ -43,10 +43,18 @@ import nvmetools.support.console as console
 
 
 def main():
+    """Checks the health of NVMe drive.
 
+    Verifies the NVMe drive health by running the short self-test diagnostic, checking the SMART
+    attributes for errors and log page 6 for prior self-test failures.
+
+    Logs results to a directory in ~/Documents/nvmetools/suites/check_nvme.  The directory name is
+    defined by the run_id command line parameter.  If run_id was not specified the directory name is
+    based on the date and time the command was run.
+    """
     try:
         parser = argparse.ArgumentParser(
-            description="Check NVMe Health",
+            description=main.__doc__,
             formatter_class=argparse.RawDescriptionHelpFormatter,
         )
         parser.add_argument(

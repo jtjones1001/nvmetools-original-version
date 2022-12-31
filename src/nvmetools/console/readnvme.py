@@ -166,7 +166,7 @@ def read_nvme(
     verbose=False,
     debug=False,
 ):
-    """Read and display NVMe information.
+    """Display and log NVMe information.
 
     Reads NVMe information using the nvmecmd utility. This utility creates a file named nvme.info.json
     with the entire set of information. This script reads nvme.info.json and displays some or all of
