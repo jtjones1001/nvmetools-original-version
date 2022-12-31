@@ -18,3 +18,8 @@ TestStep
     :members:
 
 
+Verification
+------------
+.. autofunction:: verification
+
+

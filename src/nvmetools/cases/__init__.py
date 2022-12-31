@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 """Test Cases for NVMe solid state drives (SSD).
 
@@ -15,7 +15,6 @@ easily be imported and run as shown here.
             tests.timestamp(suite)
 
 """
-
 from nvmetools.cases.features.timestamp import timestamp
 from nvmetools.cases.firmware.firmware_activate import firmware_activate
 from nvmetools.cases.firmware.firmware_download import firmware_download

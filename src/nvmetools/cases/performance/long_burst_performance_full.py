@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 from nvmetools import TestCase, steps
 from nvmetools.cases.performance.long_burst_lib import _run_burst

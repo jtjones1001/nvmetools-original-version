@@ -1,3 +1,25 @@
+# --------------------------------------------------------------------------------------
+# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# --------------------------------------------------------------------------------------
+"""Test Steps for NVMe solid state drives (SSD).
+
+All NVMe Test Steps are combined into this single python package (nvmetools.steps) so they can
+easily be imported and run as shown here.
+
+    .. code-block::
+
+        from nvmetools import steps
+
+        with TestSuite("Example suite") as suite:
+            with TestCase(suite, "Example test") as test:
+
+                start_info = steps.test_start_info(test)
+
+                # Do some stuff
+
+                steps.test_end_info(test, start_info)
+
+"""
 import os
 
 from nvmetools import Info, InfoSamples, TestStep, rqmts
@@ -6,7 +28,15 @@ from nvmetools.support.conversions import BYTES_IN_GB
 
 
 def test_start_info(test):
-    """blah blah blah."""
+    """Read and verify drive information at start of test case.
+
+    Args:
+        test: Parent TestCase instance
+
+    Returns:
+        Instance of Info class with NVMe information
+
+    """
     with TestStep(
         test, "Test start info", "Read test start info and verify drive not in error state.", stop_on_fail=True
     ) as step:
@@ -16,8 +46,40 @@ def test_start_info(test):
     return start_info
 
 
-def create_fio_big_file(test, disk_size):
+def test_end_info(test, start_info):
+    """Read and verify drive information at end of test case.
 
+    Args:
+        test: Parent TestCase instance
+        start_info:  NVMe info at start of test as Info instance
+
+    """
+    with TestStep(
+        test,
+        "Test end info",
+        "Read test end info and verify no errors or unexpected changes occurred during test.",
+    ) as step:
+        end_info = Info(test.suite.nvme, directory=step.directory, compare_info=start_info)
+
+        rqmts.no_critical_warnings(step, end_info)
+        rqmts.no_errorcount_change(step, end_info)
+        rqmts.no_static_parameter_changes(step, end_info)
+        rqmts.no_counter_parameter_decrements(step, end_info)
+
+    return end_info
+
+
+
+
+
+def create_fio_big_file(test, disk_size):
+    """Get or create a big fio data file for IO reads and writes.
+
+    Args:
+        test: Parent TestCase instance
+        disk_size:  Size of disk in bytes
+
+    """
     with TestStep(
         test,
         "Create fio file",
@@ -35,7 +97,12 @@ def create_fio_big_file(test, disk_size):
 
 
 def create_fio_performance_file(test):
+    """Get or create a fio data file for IO reads and writes without verify.
 
+    Args:
+        test: Parent TestCase instance
+
+    """
     with TestStep(
         test,
         "Create fio file",
@@ -53,7 +120,12 @@ def create_fio_performance_file(test):
 
 
 def create_fio_small_file(test):
+    """Get or create a fio data file for IO reads and writes with verify.
 
+    Args:
+        test: Parent TestCase instance
+
+    """
     with TestStep(
         test,
         "Create fio file",
@@ -71,7 +143,12 @@ def create_fio_small_file(test):
 
 
 def create_fio_stress_file(test, size):
+    """Get or create a fio data file for IO reads and writes with verify.
 
+    Args:
+        test: Parent TestCase instance
+
+    """
     with TestStep(test, "Create fio file", "Use big file if exists, else use or create a small file.") as step:
 
         step.stop_on_fail = True
@@ -89,25 +166,15 @@ def create_fio_stress_file(test, size):
     return fio_file
 
 
-def test_end_info(test, start_info):
-
-    with TestStep(
-        test,
-        "Test end info",
-        "Read test end info and verify no errors or unexpected changes occurred during test.",
-    ) as step:
-        end_info = Info(test.suite.nvme, directory=step.directory, compare_info=start_info)
-
-        rqmts.no_critical_warnings(step, end_info)
-        rqmts.no_errorcount_change(step, end_info)
-        rqmts.no_static_parameter_changes(step, end_info)
-        rqmts.no_counter_parameter_decrements(step, end_info)
-
-    return end_info
-
 
 def start_state_samples(test, cmd_file="state"):
+    """Start sampling SMART and power state info every second..
 
+    Args:
+        test: Parent TestCase instance
+        cmd_file: cmd file to use for reading samples
+
+    """
     with TestStep(test, "Sample info", "Start sampling SMART and power state info every second.") as step:
         info_samples = InfoSamples(
             test.suite.nvme,
@@ -122,7 +189,13 @@ def start_state_samples(test, cmd_file="state"):
 
 
 def idle_wait(test, wait_sec=180):
+    """Wait for drive to return to idle.
 
+    Args:
+        test: Parent TestCase instance
+        wait_sec: Number of seconds to waut
+
+    """
     with TestStep(test, "Idle wait", "Wait for idle temperature and garbage collection") as step:
 
         idle_info_samples = InfoSamples(

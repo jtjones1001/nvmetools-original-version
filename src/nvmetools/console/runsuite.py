@@ -1,6 +1,47 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
+"""Console command that runs a Test Suite.
+
+.. highlight:: none
+
+Verifies the NVMe drive health by running the short self-test diagnostic, checking the SMART attributes for
+errors and log page 6 for prior self-test failures.
+
+Logs results to ~/Documents/nvme/<name> where <name> is the date and time the command was run or the run_id
+if specified.  This directory contains a PDF test report and other data files.
+
+The debug and verbose parameters enable additional logging and keeps additional files for the purpose of
+debugging the script or device failure.  The full debug output is alway saved in the debug.log regardless of
+these parameters.
+
+.. note::
+   Test Suites with self-test tests must be run as Administrator on Windows OS.
+
+Command Line Parameters
+    --nvme, -n     Integer NVMe device number, can be found using listnvme.
+    --pdf, -p      Flag to display PDF report in a new window when the check completes.
+    --run_id, -i   String to use for the results directory name.
+    --verbose, -V  Flag for additional logging, verbose logging.
+    --debug, -D    Flag for maximum logging for debugging.
+
+**Return Value**
+
+Returns 0 if the health check passes and non-zero if it fails.
+
+**Example**
+
+This example checks the health of NVMe 0.
+
+.. code-block:: python
+
+   runsuite  --nvme 0  --volume c:  demo
+
+* `Example report (nvme_health_check.pdf) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf>`_
+* `Example console output (checknvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/checknvme.log>`_
+
+
+"""
 import argparse
 
 import nvmetools.suites as suites

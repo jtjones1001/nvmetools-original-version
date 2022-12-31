@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 """This module provides a framework for testing NVMe devices.
 
@@ -60,6 +60,11 @@ class TestStep:
     def __init__(self, test, title, description=""):
         """Runs a Test Step.
 
+        Args:
+            test: Parent TestCase instance running the step
+            title: Title of the step
+            description: Optional description for the step
+
         A Test Step is run within a Test Case which is run within a Test Suite.  A Test Step runs
         any number of requirement verifications, including zero.
 
@@ -109,11 +114,6 @@ class TestStep:
                         step.stop(force_fail=False)
                     else:
                         step.stop()
-
-        Args:
-            test: Parent TestCase instance running the step
-            title: Title of the step
-            description: Optional description for the step
 
         Attributes:
             test:            Parent TestCase instance running the test step
@@ -233,6 +233,11 @@ class TestCase:
     def __init__(self, suite, title, description=""):
         """Runs a Test Case.
 
+        Args:
+            suite: Parent TestSuite instance running the test
+            title: Title of the test
+            description: Optional description for the test
+
         A Test Case which is run within a Test Suite.  A Test Case runs one or more Test Steps.
 
         A Test Case result is either PASSED, FAILED, ABORTED, or SKIPPED.  If an unhandled
@@ -295,12 +300,6 @@ class TestCase:
                         feature_supported = get_feature_support()
                         if not feature_supported:
                             test.skip()
-
-
-        Args:
-            suite: Parent TestSuite instance running the test
-            title: Title of the test
-            description: Optional description for the test
 
         Attributes:
             suite           Parent TestSuite instance running the test
@@ -466,6 +465,10 @@ class TestSuite:
     def __init__(self, title, description="", *args, **kwargs):
         """Runs a Test Suite.
 
+        Args:
+            title: Title of the test
+            description: Optional description for the test
+
         A Test Suite runs one or more Test Cases.
 
         A Test Suite result is either PASSED, FAILED, or ABORTED.  If an unhandled
@@ -529,10 +532,6 @@ class TestSuite:
                         else:
                             test.stop()
 
-
-        Args:
-            title: Title of the test
-            description: Optional description for the test
 
         Attributes:
             directory       Working directory for step specific files
@@ -907,6 +906,13 @@ def update_test_summary(state):
 def verification(rqmt_id, step, title, verified, value):
     """Verification of a requirement.
 
+    Args:
+        rqmt_id: Unique integer ID that identifies the requirement
+        step:  The parent TestStep instance
+        title: Title of the requirement
+        verifiedean, True if the requirement passes verification
+        value:  Value to be reported as the result
+
     Verification is True if a requirement is met and False if not.  For example, the
     verification of requirement 'Media and Integrity Errors shall be 0' is True if there
     are no errors and False if there are errors.
@@ -917,13 +923,6 @@ def verification(rqmt_id, step, title, verified, value):
 
     This function is wrapped in a parent function that defines the requirement to verify.
     For example, this parent function verifies there are no prior self-test failures.
-
-    Args:
-        rqmt_id: Unique integer ID that identifies the requirement
-        step:  The parent TestStep instance
-        title: Title of the requirement
-        verifiedean, True if the requirement passes verification
-        value:  Value to be reported as the result
 
     .. code-block::
 

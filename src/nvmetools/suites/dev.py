@@ -1,19 +1,20 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-import platform
-import time
-
 from nvmetools import TestSuite, tests
 
 
-def big_demo(args):
-    """Demonstration Test Suite with all NVMe Test Cases.
+def devinfo(args):
+    """Read and verify start and end info for development."""
+    with TestSuite("Info", devinfo.__doc__, **args) as suite:
+        suite.stop_on_fail = False
+        info = tests.suite_start_info(suite)
+        tests.suite_end_info(suite, info)
 
-    Test suite with all possible test cases that creates a big report for demonstration.
-    """
 
-    with TestSuite("Big Demo", big_demo.__doc__,**args) as suite:
+def dev(args):
+    """Short suite for test development."""
+    with TestSuite("Development", dev.__doc__, **args) as suite:
 
         info = tests.suite_start_info(suite)
         tests.admin_commands(suite)
@@ -37,14 +38,10 @@ def big_demo(args):
         # Selftests
 
         tests.short_selftest(suite)
-        if platform.system() == "Windows":
-            time.sleep(600)
-        tests.extended_selftest(suite)
 
         # Performance tests
 
         tests.short_burst_performance(suite)
-        tests.long_burst_performance(suite)
 
         tests.aspm_latency(suite)
         tests.nonop_power_times(suite)
@@ -58,7 +55,6 @@ def big_demo(args):
         tests.big_file_reads(suite)
 
         tests.short_burst_performance_full(suite)
-        tests.long_burst_performance_full(suite)
 
         # Stress tests
 
@@ -69,19 +65,3 @@ def big_demo(args):
 
         tests.suite_end_info(suite, info)
 
-
-def short_demo(args):
-    """Demonstration Test Suite with a few NVMe Test Cases.
-
-    Test suite with a few Test Cases that run very quickly for short demonstrations.
-    """
-    with TestSuite("Short demo", short_demo.__doc__,*args) as suite:
-
-        info = tests.suite_start_info(suite)
-
-        tests.firmware_update(suite)
-        tests.firmware_activate(suite)
-        tests.firmware_download(suite)
-        tests.firmware_security(suite)
-
-        tests.suite_end_info(suite, info)

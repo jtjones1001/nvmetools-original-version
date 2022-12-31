@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 """Console command that updates test suites.
 
@@ -21,11 +21,7 @@ This function updates the following files in a Test Suite:
         <test #>   results.json
 
 Command Line Parameters
-    --nvme, -n     Integer NVMe device number, can be found using listnvme.
-    --pdf, -p      Flag to display PDF report in a new window when the check completes.
-    --run_id, -i   String to use for the results directory name.
-    --verbose, -V  Flag for additional logging, verbose logging.
-    --debug, -D    Flag for maximum logging for debugging.
+    --directory, -d Directory of the test suite logs
 
 **Return Value**
 

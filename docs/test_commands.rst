@@ -1,7 +1,7 @@
-Test NVMe Drives
-================
-Console commands used to test NVMe drives.  These commands can be entered into the linux or Windows
-terminal.
+Test Drive
+==========
+These console commands test NVMe PCIe drives.  The commands can be entered directly into the linux
+or Windows terminal.
 
 checknvme
 ---------
@@ -9,7 +9,7 @@ checknvme
 
 runsuite
 --------
-tbd
+.. automodule:: nvmetools.console.runsuite
 
 updatesuite
 -----------
