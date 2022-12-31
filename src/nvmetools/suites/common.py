@@ -8,6 +8,7 @@ import time
 from nvmetools import TestSuite, tests
 from nvmetools.support.conversions import is_admin
 
+
 def firmware(args):
     """Verify the firmware update process."""
 

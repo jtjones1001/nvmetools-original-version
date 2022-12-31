@@ -1,3 +1,4 @@
 Information
 ===========
-blah
+.. automodule:: nvmetools.support.info
+    :members:

@@ -226,8 +226,6 @@ class TestStep:
         raise self.__Stop
 
 
-
-
 class TestCase:
     stop_on_fail = False
     __force_fail = False
@@ -542,8 +540,6 @@ class TestSuite:
             loglevel        Amount of detail to display, 0 = least, 1 = default, 2 = verbose, and 3 = debug
 
         """
-
-
 
         for item in kwargs.items():
             self.__setattr__(item[0], item[1])

@@ -6,23 +6,24 @@ import re
 
 # Prefer to use the version of the theme in this repo
 # and not the installed version of the theme.
-sys.path.insert(0, os.path.abspath('..'))
+#sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../src'))
-sys.path.append(os.path.abspath('./demo/'))
+# sys.path.append(os.path.abspath('./demo/'))
 
-from sphinx_rtd_theme import __version__ as theme_version
-from sphinx_rtd_theme import __version_full__ as theme_version_full
-from sphinx.locale import _
+#from sphinx_rtd_theme import __version__ as theme_version
+#from sphinx_rtd_theme import __version_full__ as theme_version_full
+
+#from sphinx.locale import _
 
 autodoc_mock_imports = ['numpy','psutil','matplotlib','cycler','reportlab']
-#autoclass_content = "init"
+autoclass_content = "init"
 
 project = u'nvmetools'
 slug = re.sub(r'\W+', '-', project.lower())
 version = "0.3.0"
 release = version
 author = u'Joe Jones'
-copyright = "Copyright(c) 2022 Joseph Jones"
+copyright = "2023 Joseph Jones"
 language = 'en'
 
 extensions = [
@@ -30,7 +31,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.mathjax',
-    'sphinx.ext.viewcode',
+  #  'sphinx.ext.viewcode',
     'sphinx_rtd_theme',
     'sphinx.ext.napoleon'
 ]
@@ -47,8 +48,6 @@ pygments_style = 'default'
 
 
 '''
-
-
 if sys.version_info < (3, 0):
     tags.add("python2")
 else:
@@ -73,15 +72,17 @@ if not 'READTHEDOCS' in os.environ:
     html_static_path = ['_static/']
     html_js_files = ['debug.js']
 
+    '''
     # Add fake versions for local QA of the menu
     html_context['test_versions'] = list(map(
         lambda x: str(x / 10),
         range(1, 100)
     ))
+    '''
+
 
 #html_logo = "_static/nvme_icon.png"
 html_show_sourcelink = True
-
 htmlhelp_basename = slug
 
 
@@ -97,7 +98,7 @@ texinfo_documents = [
   ('index', slug, project, author, slug, project, 'Miscellaneous'),
 ]
 
-
+'''
 # Extensions to theme docs
 def setup(app):
     from sphinx.domains.python import PyField
@@ -124,3 +125,7 @@ def setup(app):
             ),
         ]
     )
+
+
+
+'''

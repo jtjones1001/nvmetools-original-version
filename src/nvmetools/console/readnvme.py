@@ -128,6 +128,7 @@ def read_nvme(
 
         if create_pdf:
             from nvmetools.support.report import InfoReport
+
             report = InfoReport(info)
             report.save()
 

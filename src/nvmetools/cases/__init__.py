@@ -1,6 +1,21 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
+"""Test Cases for NVMe solid state drives (SSD).
+
+All NVMe Test Cases are combined into this single python package (nvmetools.tests) so they can
+easily be imported and run as shown here.
+
+    .. code-block::
+
+        from nvmetools import tests
+
+        with TestSuite("suite") as suite:
+
+            tests.timestamp(suite)
+
+"""
+
 from nvmetools.cases.features.timestamp import timestamp
 from nvmetools.cases.firmware.firmware_activate import firmware_activate
 from nvmetools.cases.firmware.firmware_download import firmware_download

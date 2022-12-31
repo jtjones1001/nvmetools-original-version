@@ -25,6 +25,10 @@ def timestamp(suite):
 
     If the timestamp feature is not supported the test passes since this is an
     optional feature.
+
+    Args:
+        suite:  Parent TestSuite instance
+
     """
     with TestCase(suite, "Timestamp", timestamp.__doc__) as test:
 

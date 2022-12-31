@@ -1,8 +1,20 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Requirements for the testing of NVMe drives."""
+"""Requirements for testing NVMe solid state drives (SSD).
 
+All NVMe requirements are combined into this single python package (nvmetools.rqmts) so they
+can easily be imported and run as shown here.
+
+    .. code-block::
+
+        from nvmetools import rqmts
+
+           # call from within a TestStep instance...
+
+                rqmts.accurate_power_on_change(step)
+
+"""
 from nvmetools.requirements.fio import no_data_corruption, no_io_errors
 from nvmetools.requirements.info import (
     accurate_power_on_change,
