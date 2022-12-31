@@ -13,21 +13,10 @@ def firmware(args):
     """Test Suite to verify firmware features.
 
     Args:
-        args: dictionary of NVMe parameters passed from runsuite command
+        args: dictionary of NVMe parameters passed from testnvme command
 
     This suite runs Test Cases to verify firmware update, firmware activate, firmware download,
     and firmware security features.
-
-        .. code-block::
-
-            info = tests.suite_start_info(suite)
-
-            tests.firmware_update(suite)
-            tests.firmware_activate(suite)
-            tests.firmware_download(suite)
-            tests.firmware_security(suite)
-
-            tests.suite_end_info(suite, info)
     """
     with TestSuite("Firmware", firmware.__doc__, **args) as suite:
 
@@ -45,13 +34,13 @@ def functional(args):
     """Test Suite to verify functional features.
 
     Args:
-        args: dictionary of NVMe parameters passed from runsuite command
+        args: dictionary of NVMe parameters passed from testnvme command
 
     This suite verifies the reliability and performance of the admin commands, SMART attributes,
     and timestamp.
 
     """
-    with TestSuite("Long functional", functional.__doc__, **args) as suite:
+    with TestSuite("Functional", functional.__doc__, **args) as suite:
 
         info = tests.suite_start_info(suite)
 
@@ -68,13 +57,14 @@ def functional(args):
 def health(args):
     """Verifies drive health and wear with self-test diagnostic and SMART attributes.
 
-    Short two minute test suite to verify drive is healthy.
+    Check NVMe is a short Test Suite that verifies drive health and wear by running the drive
+    diagnostic, reviewing SMART data and Self-Test history.
     """
     if platform.system() == "Windows" and not is_admin():
         print(" This script requires running with admin (root) privileges")
         sys.exit(1)
 
-    with TestSuite("Check NVMe Health", health.__doc__, **args) as suite:
+    with TestSuite("Check NVMe", health.__doc__, **args) as suite:
 
         info = tests.suite_start_info(suite)
         tests.short_diagnostic(suite)
@@ -87,7 +77,7 @@ def performance(args):
     Measures IO peformance for several conditions including short and long bursts of reads
     and writes."""
 
-    with TestSuite("Performance Test", perf.__doc__, **args) as suite:
+    with TestSuite("Performance Test", performance.__doc__, **args) as suite:
 
         info = tests.suite_start_info(suite)
 

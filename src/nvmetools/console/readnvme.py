@@ -1,19 +1,15 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Console command that reads information from NVMe drive.
+"""Console command that displays and logs NVMe drive information.
 
-Reads NVMe drive information using the Admin Commands: Get Log Page, Get Feature, Identify Controller, and
-Identify Namespace. A few parameters, such as PCIe location and link info, are read from the OS.
+Reads NVMe drive information using the Admin Commands: Get Log Page, Get Feature, Identify
+Controller, and Identify Namespace. A few parameters, such as PCIe location and link info, are read
+from the OS.
 
-Logs to the current directory.  The readnvme.log contains the console output and the nvme.info.json contains
-the NVMe parameters in json format.
+The amount and type of information displayed can be configured with command line parameters.
 
-The debug and verbose parameters enable additional logging and keeps additional files for the purpose of
-debugging the script or device failure. The full debug output is alway saved in the debug.log regardless of
-these parameters.
-
-Command Line Parameters
+**Command Line Parameters**
     --nvme, -n      Integer NVMe device number, can be found using listnvme.
     --verbose, -v   Display additional parameters.
     --all, -a       Display all parameters.
@@ -22,9 +18,13 @@ Command Line Parameters
     --hex, -x       Display raw data read as hex format.
     --pdf, -p       Flag to create PDF report.
 
-**Return Value**
+The following log files are saved to the working directory:
 
-    Returns 0 if the read passes and non-zero if it fails.
+    * readnvme.log contains the console output
+    * nvme.info.json contains the NVMe parameters in json format
+    * readnvme.pdf is a PDF format report (only if --pdf specified)
+    * nvmecmd.trace.log and trace.log are trace file for debug if something goes wrong
+    * read.summary.json contains information on the Admin commands used
 
 **Example**
 
@@ -38,7 +38,92 @@ Command Line Parameters
         readnvme  --nvme 0 --all
         readnvme  --nvme 0 --hex
 
-    * `Example console output (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme/readnvme.log>`_
+    Example console output
+
+    .. code-block::
+
+        EPIC NVMe Utilities, version 0.0.8, www.epicutils.com, Copyright (C) 2022 Joe Jones
+
+         ------------------------------------------------------------------------------------------
+          NVME DRIVE 0  (/dev/nvme0)
+         ------------------------------------------------------------------------------------------
+          Vendor                                             Sandisk
+          Model Number (MN)                                  WDC WDS250G2B0C-00PXH0
+          Serial Number (SN)                                 2035A0805352
+          Size                                               250 GB
+          Version (VER)                                      1.4.0
+
+          Number of Namespaces (NN)                          1
+          Namespace 1 Size                                   250 GB
+          Namespace 1 Active LBA Size                        512
+          Namespace 1 EUID                                   001b44-8b49bc0ecb
+          Namespace 1 NGUID                                  e8238fa6bf530001-001b44-8b49bc0ecb
+
+          Firmware Revision (FR)                             211070WD
+          Firmware Slots                                     2
+          Firmware Activation Without Reset                  Supported
+
+          Maximum Data Transfer Size (MDTS)                  128
+          Enable Host Memory (EHM)                           Enabled
+          Host Memory Buffer Size (HSIZE)                    8,192 pages
+          Volatile Write Cache (VWC)                         Supported
+          Volatile Write Cache Enable (WCE)                  Enabled
+
+          Critical Warnings                                  No
+          Media and Data Integrity Errors                    0
+          Number Of Failed Self-Tests                        0
+          Number of Error Information Log Entries            1
+
+         ----------------------------------------------------------------------
+          Temperature       Value          Under Threshold     Over Threshold
+         ----------------------------------------------------------------------
+          Composite         25 C           -5 C                80 C
+
+         ------------------------------------------------------------------------
+          Throttle      Total       TMT1        TMT2        WCTEMP      CCTEMP
+         ------------------------------------------------------------------------
+          Time (Hrs)    0.917       0.000       0.000       0.015       0.001
+          Threshold                 Disabled    Disabled    80 C        85 C
+          Count                     0           0           --          --
+
+          Available Spare                                    100 %
+          Available Spare Threshold                          10 %
+          Controller Busy Time                               15,937 Min
+          Data Read                                          356,901.852 GB
+          Data Written                                       120,948.038 GB
+          Host Read Commands                                 9,314,262,073
+          Host Write Commands                                5,212,102,971
+          Percentage Used                                    17 %
+          Power On Hours                                     1,779
+          Power Cycles                                       153
+          Unsafe Shutdowns                                   23
+
+         ------------------------------------------------------------------------------------------
+          State   NOP    Max         Active      Idle        Entry Latency   Exit Latency
+         ------------------------------------------------------------------------------------------
+          0              3.5 W       1.8 W       0.63 W
+          1              2.4 W       1.6 W       0.63 W
+          2              1.9 W       1.5 W       0.63 W
+          3       Yes    0.02 W                  0.02 W      3,900 uS        11,000 uS
+          4       Yes    0.005 W                 0.005 W     5,000 uS        39,000 uS
+
+          Autonomous Power State Transition                  Supported
+          Autonomous Power State Transition Enable (APSTE)   Enabled
+          Non-Operational Power State Permissive Mode        Supported
+          Non-Operational Power State Permissive Mode Enable (NOPPME) Enabled
+
+          PCI Width                                          x4
+          PCI Speed                                          Gen3 8.0GT/s
+          PCI Rated Width                                    x4
+          PCI Rated Speed                                    Gen3 8.0GT/s
+
+         ------------------------------------------------------------------------------------------
+          PCI         Vendor              Vendor ID    Device ID    Location
+         ------------------------------------------------------------------------------------------
+          Endpoint    Sandisk             0x15B7       0x5009       Bus 1, device 0, function 0
+          Root                            0x8086       0xA340       Bus 0, device 27, function 0
+
+
     * `Example console output with --all (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_all/readnvme.log>`_
     * `Example console output with --hex (readnvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_hex/readnvme.log>`_
 

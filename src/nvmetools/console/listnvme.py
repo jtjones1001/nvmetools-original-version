@@ -1,20 +1,16 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Console command that lists NVMe drives in the system.
+"""Console command that lists the NVMe drives in the system.
 
 .. highlight:: none
 
-Assigns each NVMe drive an NVMe number.  On Windows, the NVMe number is the same as the physical drive number
-(2 = physicaldrive2) and on linux it is the /dev/nvme# number (3 = /dev/nvme3).
+Displays the NVMe drives in the system.  Each drive has a unique 'NVMe number' that identifies that
+specific NVMe.  The other console commands require this number to know which NVMe drive to read or
+test.
 
-**Command Line Parameters**
-
-    There are no command line parameters
-
-**Return Value**
-
-    Returns 0 if passes and non-zero if it fails.
+On Windows, the NVMe number is the same as the physical drive number (2 = physicaldrive2).  On linux
+the NVMe number is the /dev/nvme number (3 = /dev/nvme3).
 
 **Example**
 

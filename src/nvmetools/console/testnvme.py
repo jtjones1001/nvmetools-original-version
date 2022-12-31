@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Console command that runs a Test Suite.
+"""Console command that runs an NVMe Test Suite.
 
 .. highlight:: none
 
@@ -35,7 +35,7 @@ This example checks the health of NVMe 0.
 
 .. code-block:: python
 
-   runsuite  --nvme 0  --volume c:  demo
+   testnvme  --nvme 0  --volume c:  demo
 
 * `Example report (nvme_health_check.pdf) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf>`_
 * `Example console output (checknvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/checknvme.log>`_

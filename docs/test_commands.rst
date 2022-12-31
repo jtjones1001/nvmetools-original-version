@@ -1,16 +1,19 @@
 Test Drive
 ==========
-These console commands test NVMe PCIe drives.  The commands can be entered directly into the linux
-or Windows terminal.
+The console commands checknvme and testnvme are used to test NVMe drives.  The updatenvme command
+is used to update test results from these commands.
+
+Console commands can be run in the linux or Windows terminal from any directory.  All console
+commands return a 0 on pass and non-zero on fail.
 
 checknvme
 ---------
 .. automodule:: nvmetools.console.checknvme
 
-runsuite
+testnvme
 --------
 .. automodule:: nvmetools.console.testnvme
 
-updatesuite
------------
+updatenvme
+----------
 .. automodule:: nvmetools.console.updatenvme

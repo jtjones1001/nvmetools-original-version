@@ -1,11 +1,11 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Test Suites for NVMe solid state drives (SSD) run using the runsuite console command..
+"""Test Suites for NVMe solid state drives (SSD) run using the testnvme console command..
 
-The runsuite command passes the same standard parameters to each Test Suite::
+The testnvme command passes the same standard parameters to each Test Suite::
 
-    Parameters from runsuite
+    Parameters from testnvme
 
         nvme: nvme to test
         volume: volume to test

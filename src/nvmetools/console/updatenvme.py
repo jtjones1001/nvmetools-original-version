@@ -33,7 +33,7 @@ This example updates the test suite for the current directory.
 
 .. code-block:: python
 
-   updatesuite .
+   updatenvme .
 
 """
 import argparse

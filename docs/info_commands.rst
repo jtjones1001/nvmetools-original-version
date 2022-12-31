@@ -1,7 +1,10 @@
 Read Information
 ================
-Console commands used to read information about NVMe drives.  These commands can be entered into the
-linux or Windows terminal.
+The console commands listnvme and readnvme are used to display and log information about
+NVMe drives.
+
+Console commands can be run in the linux or Windows terminal from any directory.  All console
+commands return a 0 on pass and non-zero on fail.
 
 listnvme
 --------

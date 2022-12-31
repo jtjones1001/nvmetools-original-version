@@ -553,7 +553,10 @@ class TestSuite:
         self.test_number = 0
         self.data = {}
 
-        self.uid = f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        if self.run_id == "":
+            self.uid = f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        else:
+            self.uid = self.run_id
 
         self.directory = os.path.realpath(
             os.path.join(TEST_SUITE_DIRECTORY, title.lower().replace(" ", "_"), self.uid)
@@ -808,7 +811,7 @@ def update_suite_files(directory="."):
     with open(suite_results_file, "r") as file_object:
         suite_results = json.load(file_object)
 
-    log = start_logger(full_directory, logging.IMPORTANT, "updatesuite_console.log")
+    log = start_logger(full_directory, logging.IMPORTANT, "update_console.log")
 
     log.important(" " + "-" * 90, indent=False)
     log.important(f" UPDATE TEST SUITE : {suite_results['title']}", indent=False)
