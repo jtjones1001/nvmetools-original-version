@@ -9,8 +9,8 @@ checknvme
 
 runsuite
 --------
-.. automodule:: nvmetools.console.runsuite
+.. automodule:: nvmetools.console.testnvme
 
 updatesuite
 -----------
-.. automodule:: nvmetools.console.updatesuite
+.. automodule:: nvmetools.console.updatenvme

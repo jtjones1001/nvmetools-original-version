@@ -13,7 +13,7 @@ def big_demo(args):
     Test suite with all possible test cases that creates a big report for demonstration.
     """
 
-    with TestSuite("Big Demo", big_demo.__doc__,**args) as suite:
+    with TestSuite("Big Demo", big_demo.__doc__, **args) as suite:
 
         info = tests.suite_start_info(suite)
         tests.admin_commands(suite)
@@ -75,7 +75,7 @@ def short_demo(args):
 
     Test suite with a few Test Cases that run very quickly for short demonstrations.
     """
-    with TestSuite("Short demo", short_demo.__doc__,*args) as suite:
+    with TestSuite("Short demo", short_demo.__doc__, *args) as suite:
 
         info = tests.suite_start_info(suite)
 

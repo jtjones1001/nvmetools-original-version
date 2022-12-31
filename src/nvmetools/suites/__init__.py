@@ -17,6 +17,6 @@ The runsuite command passes the same standard parameters to each Test Suite::
 The first test case in every Test Suite is suite_start_info and the last test case is suite_end_info.
 
 """
-from nvmetools.suites.common import  firmware, functional, health, performance, selftest, stress
+from nvmetools.suites.common import firmware, functional, health, performance, selftest, stress
 from nvmetools.suites.demo import big_demo, short_demo
 from nvmetools.suites.dev import dev, devinfo

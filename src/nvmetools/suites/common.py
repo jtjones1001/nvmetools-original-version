@@ -40,6 +40,7 @@ def firmware(args):
 
         tests.suite_end_info(suite, info)
 
+
 def functional(args):
     """Test Suite to verify functional features.
 

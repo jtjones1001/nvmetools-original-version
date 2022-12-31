@@ -69,9 +69,6 @@ def test_end_info(test, start_info):
     return end_info
 
 
-
-
-
 def create_fio_big_file(test, disk_size):
     """Get or create a big fio data file for IO reads and writes.
 
@@ -164,7 +161,6 @@ def create_fio_stress_file(test, size):
         test.data["fio filepath"] = fio_file.os_filepath
 
     return fio_file
-
 
 
 def start_state_samples(test, cmd_file="state"):

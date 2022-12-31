@@ -64,4 +64,3 @@ def dev(args):
         tests.temperature_cycle_stress(suite)
 
         tests.suite_end_info(suite, info)
-

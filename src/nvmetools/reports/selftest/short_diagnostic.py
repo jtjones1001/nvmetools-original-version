@@ -81,13 +81,13 @@ def report(report, test_result):
             if sample["status"] != 0:
                 diag_progress.append(as_int(sample["percent complete"]))
                 diag_progress_time.append((sample_time - start_time).total_seconds() / 60.00)
-        report.add_pagebreak()
+
         report.add_paragraph(
             """This plot shows the progress reported in Log Page 6 during the diagnostic.
             <br/><br/>"""
         )
         report.add_diagnostic_progress_plot(diag_progress_time, diag_progress)
-
+        report.add_pagebreak()
         report.add_paragraph(
             """This plot shows the NVMe composite temperature during the diagnostic.
             The horizontal red lines are the throttle temperature limits for reference.
