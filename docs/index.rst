@@ -8,25 +8,25 @@ The nvmetools python package to read and test NVMe drives.
 .. Hidden TOCs
 
 .. toctree::
-        :caption: Tool User
-        :maxdepth: 2
-        :hidden:
+   :caption: Tool User
+   :maxdepth: 2
+   :hidden:
 
-        install_steps
-        info_commands
-        test_commands
+   install_steps
+   info_commands
+   test_commands
 
 .. toctree::
-        :maxdepth: 2
-        :caption: Test Developer
-        :hidden:
+    :maxdepth: 2
+    :caption: Test Developer
+    :hidden:
 
-        framework
-        test_suites
-        test_cases
-        test_steps
-        verifications
-        information
+    framework
+    test_suites
+    test_cases
+    test_steps
+    verifications
+    information
 
 
 

@@ -18,9 +18,9 @@ copyright = "2023 Joseph Jones"
 language = 'en'
 
 extensions = [
- #   'sphinx.ext.intersphinx',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.autodoc',
- #   'sphinx.ext.autosummary',
+    'sphinx.ext.autosummary',
  #   'sphinx.ext.mathjax',
   #  'sphinx.ext.viewcode',
     'sphinx_rtd_theme',
@@ -31,7 +31,7 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 exclude_patterns = []
 locale_dirs = ['locale/']
-#gettext_compact = False
+gettext_compact = False
 
 #master_doc = 'index'
 #suppress_warnings = ['image.nonlocal_uri']
