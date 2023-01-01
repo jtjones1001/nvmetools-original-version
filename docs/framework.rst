@@ -17,7 +17,6 @@ TestStep
 .. autoclass:: TestStep
     :members:
 
-
 Verification
 ------------
 .. autofunction:: verification
