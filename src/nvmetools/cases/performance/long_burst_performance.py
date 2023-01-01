@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-from nvmetools import TestCase, steps
+from nvmetools import TestCase, TestStep, rqmts, steps
 from nvmetools.cases.performance.long_burst_lib import _run_burst
 
 
@@ -68,9 +68,17 @@ def long_burst_performance(suite):
                 1,
             )
         # -----------------------------------------------------------------------------------------
-        # Step : Read NVMe info and compare against starting info
+        # Step : Verify performance within limits
         # -----------------------------------------------------------------------------------------
-        # This test reads the full information and verifies no counter decrements, static parameter
-        # changes, no critical warnings, and no error count increases.
+        with TestStep(test, "Verify performance", "Verify short burst performance.") as step:
+
+            rqmts.random_read_4k_qd1_bandwidth(step, test.data)
+            rqmts.random_write_4k_qd1_bandwidth(step, test.data)
+            rqmts.sequential_read_128k_qd32_bandwidth(step, test.data)
+            rqmts.sequential_write_128k_qd32_bandwidth(step, test.data)
+            rqmts.bandwidth_vs_qd_bs(step)
+
+        # -----------------------------------------------------------------------------------------
+        # Step : Read NVMe info and compare against starting info
         # -----------------------------------------------------------------------------------------
         steps.test_end_info(test, start_info)

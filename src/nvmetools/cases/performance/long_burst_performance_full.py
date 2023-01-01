@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-from nvmetools import TestCase, steps
+from nvmetools import TestCase, TestStep, rqmts, steps
 from nvmetools.cases.performance.long_burst_lib import _run_burst
 
 
@@ -34,10 +34,6 @@ def long_burst_performance_full(suite):
         # -----------------------------------------------------------------------------------------
         # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        # This step will stop the test if cannot find or create the file.  The test requires the
-        # big file. Since this is a stress test it must check the data integrity so the file will
-        # be created with verify=True.  Note big files always have verify=True
-        # -----------------------------------------------------------------------------------------
         fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
@@ -68,9 +64,17 @@ def long_burst_performance_full(suite):
                 1,
             )
         # -----------------------------------------------------------------------------------------
-        # Step : Read NVMe info and compare against starting info
+        # Step : Verify performance within limits
         # -----------------------------------------------------------------------------------------
-        # This test reads the full information and verifies no counter decrements, static parameter
-        # changes, no critical warnings, and no error count increases.
+        with TestStep(test, "Verify performance", "Verify short burst performance.") as step:
+
+            rqmts.random_read_4k_qd1_bandwidth(step, test.data)
+            rqmts.random_write_4k_qd1_bandwidth(step, test.data)
+            rqmts.sequential_read_128k_qd32_bandwidth(step, test.data)
+            rqmts.sequential_write_128k_qd32_bandwidth(step, test.data)
+            rqmts.bandwidth_vs_qd_bs(step)
+
+        # -----------------------------------------------------------------------------------------
+        # Step : Read NVMe info and compare against starting info
         # -----------------------------------------------------------------------------------------
         steps.test_end_info(test, start_info)

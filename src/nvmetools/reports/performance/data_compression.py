@@ -20,7 +20,7 @@ def report(report, test_result):
     report.add_description(
         f"""This test attempts to determine if the drive implements data compression.  Data
         compression is a feature that reduces the amount of data written to the NAND flash resulting
-        in lower write latency, extended drive life, and reduced garbage collection overhead [13, 14].
+        in lower write latency, extended drive life, and reduced garbage collection overhead.
         <br/><br/>
         This test reports the average latency for {test_result['data']['io size gib']} GiB of reads
         and writes with incompressible and compressible data. Drives with data compression should

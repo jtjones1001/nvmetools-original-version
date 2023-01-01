@@ -22,7 +22,7 @@ def report(report, test_result):
         f""" This test attempts to determine if the drive implements data deduplication.  Data
         deduplication is a feature that reduces the amount of duplicate data written to the NAND
         flash resulting in lower write latency, extended drive life, and reduced garbage collection
-        overhead [10, 11, 12].
+        overhead.
         <br/><br/>
 
         This test reports the average latency for {test_result['data']['io size gib']} GiB of writes

@@ -2,7 +2,6 @@
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 import platform
-import sys
 import time
 
 from nvmetools import TestSuite, tests
@@ -12,11 +11,11 @@ from nvmetools.support.conversions import is_admin
 def firmware(args):
     """Test Suite to verify firmware features.
 
-    Args:
-        args: dictionary of NVMe parameters passed from testnvme command
-
     This suite runs Test Cases to verify firmware update, firmware activate, firmware download,
     and firmware security features.
+
+    Args:
+        args: dictionary of NVMe parameters passed from testnvme command
     """
     with TestSuite("Firmware", firmware.__doc__, **args) as suite:
 
@@ -33,12 +32,11 @@ def firmware(args):
 def functional(args):
     """Test Suite to verify functional features.
 
-    Args:
-        args: dictionary of NVMe parameters passed from testnvme command
-
     This suite runs Test Cases to verify the admin commands, SMART attrbiutes, timestamp, and
     short self-test.
 
+    Args:
+        args: dictionary of NVMe parameters passed from testnvme command
     """
     with TestSuite("Functional", functional.__doc__, **args) as suite:
 
@@ -57,17 +55,16 @@ def functional(args):
 def health(args):
     """Verifies drive health and wear with self-test diagnostic and SMART attributes.
 
-    Args:
-        args: dictionary of NVMe parameters passed from testnvme command
-
     Check NVMe is a short Test Suite that verifies drive health and wear by running the drive
     diagnostic, reviewing SMART data and Self-Test history.
-    """
-    if platform.system() == "Windows" and not is_admin():
-        print(" This script requires running with admin (root) privileges")
-        sys.exit(1)
 
-    with TestSuite("Check NVMe", health.__doc__, **args) as suite:
+    Args:
+        args: dictionary of NVMe parameters passed from testnvme command
+    """
+    with TestSuite("Check NVMe Health", health.__doc__, **args) as suite:
+
+        if not is_admin():
+            suite.stop("Test Suite must be run as Administrator.")
 
         info = tests.suite_start_info(suite)
         tests.short_diagnostic(suite)
@@ -77,11 +74,12 @@ def health(args):
 def performance(args):
     """Test suite to measure NVMe IO performance.
 
+    Measures IO peformance for several conditions including short and long bursts of reads
+    and writes.
+
     Args:
         args: dictionary of NVMe parameters passed from testnvme command
-
-    Measures IO peformance for several conditions including short and long bursts of reads
-    and writes."""
+    """
 
     with TestSuite("Performance Test", performance.__doc__, **args) as suite:
 
@@ -110,17 +108,16 @@ def performance(args):
 def selftest(args):
     """Short and extended self-test.
 
+    This suite runs Test Cases to verify the short and extended versions of the self-test.
+
     Args:
         args: dictionary of NVMe parameters passed from testnvme command
 
-    This suite runs Test Cases to verify the short and extended versions of the self-test.
     """
-
-    if platform.system() == "Windows" and not is_admin():
-        print(" This script requires running with admin (root) privileges")
-        sys.exit(1)
-
     with TestSuite("Selftest", selftest.__doc__, **args) as suite:
+
+        if not is_admin():
+            suite.stop("Test Suite must be run as Administrator.")
 
         info = tests.suite_start_info(suite)
 
@@ -136,10 +133,10 @@ def selftest(args):
 def stress(args):
     """Test suite to verify drive reliaility under IO stress.
 
+    This suite runs Test Cases to stress the drive in several different ways
+
     Args:
         args: dictionary of NVMe parameters passed from testnvme command.
-
-    This suite runs Test Cases to stress the drive in several different ways.
     """
 
     with TestSuite("Stress", stress.__doc__, **args) as suite:

@@ -731,21 +731,6 @@ class NvmeReport(InfoReport):
                 9. What SMART Stats Tell Us About Hard Drives, Backblaze blog,<br/>
                  https://www.backblaze.com/blog/what-smart-stats-indicate-hard-drive-failures/
                 <br/><br/>
-
-                10.  Data dedupe paper 1
-                <br/><br/>
-
-                11.  Data dedupe paper 2
-                <br/><br/>
-
-                12.  Data dedupe paper 3
-                <br/><br/>
-
-                13.  Data compression paper 1
-                <br/><br/>
-
-                14.  Data compression paper 2
-                <br/><br/>
                 """
         )
 

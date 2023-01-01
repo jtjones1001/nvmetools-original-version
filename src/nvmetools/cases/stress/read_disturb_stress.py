@@ -44,10 +44,6 @@ def read_disturb_stress(suite):
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State
         # -----------------------------------------------------------------------------------------
-        # Start reading SMART and Power State info at a regular interval until stopped.  This data
-        # can be used to plot temperature, bandwidth, power states, etc.  Only read SMART and Power
-        # State feature to limit impact of reading info on the IO performance
-        # -----------------------------------------------------------------------------------------
         info_samples = steps.start_state_samples(test)
 
         # -----------------------------------------------------------------------------------------

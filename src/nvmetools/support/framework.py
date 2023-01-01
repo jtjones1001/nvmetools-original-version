@@ -207,13 +207,13 @@ class TestStep:
     class __Stop(Exception):
         nvme_framework_exception = True
 
-        def __init__(self):
+        def __init__(self, message=""):
             log.frames("TestStep.Stop", inspect.getouterframes(inspect.currentframe(), context=1))
-            log.info("----> STEP STOP", indent=False)
+            log.info(f"----> STEP STOP : {message}", indent=False)
             log.info("")
             super().__init__("TestStep.Stop")
 
-    def stop(self, force_fail=True):
+    def stop(self, force_fail=True, message=""):
         """Stop the TestStep.
 
         Stops the step when called.  By default will force the step to fail.  If force_fail=False
@@ -225,7 +225,7 @@ class TestStep:
 
         """
         self.__force_fail = force_fail
-        raise self.__Stop
+        raise self.__Stop(message)
 
 
 class TestCase:
@@ -428,14 +428,14 @@ class TestCase:
 
         return True
 
-    def skip(self, msg=""):
+    def skip(self, message=""):
         """Skip the TestCase.
 
         Skips the test when called.
         """
-        raise self.__Skip(msg)
+        raise self.__Skip(message)
 
-    def stop(self, force_fail=True):
+    def stop(self, force_fail=True, message=""):
         """Stop the TestCase.
 
         Stops the test when called.  By default will force the test to fail.  If force_fail=False
@@ -447,7 +447,7 @@ class TestCase:
 
         """
         self.__force_fail = force_fail
-        raise self.__Stop
+        raise self.__Stop(message)
 
     def update_summary(self):
         self.state = update_test_summary(self.state)
@@ -455,18 +455,18 @@ class TestCase:
     class __Skip(Exception):
         nvme_framework_exception = True
 
-        def __init__(self, msg=""):
+        def __init__(self, message=""):
             log.frames("TestCase.Skip", inspect.getouterframes(inspect.currentframe(), context=1))
-            log.info(f"----> TEST SKIP : {msg}", indent=False)
+            log.info(f"----> TEST SKIP : {message}", indent=False)
             log.info("")
             super().__init__("TestCase.Skip")
 
     class __Stop(Exception):
         nvme_framework_exception = True
 
-        def __init__(self, msg=""):
+        def __init__(self, message=""):
             log.frames("TestCase.Stop", inspect.getouterframes(inspect.currentframe(), context=1))
-            log.info(f"----> TEST STOP : {msg}", indent=False)
+            log.info(f"----> TEST STOP : {message}", indent=False)
             log.info("")
             super().__init__("TestCase.Stop")
 
@@ -557,8 +557,18 @@ class TestSuite:
         for item in kwargs.items():
             self.__setattr__(item[0], item[1])
 
-        self._description = description.split("\n")[0]
-        self.details = description
+        description_lines = description.split("\n")
+        self._description = description_lines[0]
+        self.details = self._description
+
+        if len(description_lines) > 2 and description_lines[1].strip() == "":
+            second_paragraph = ""
+            for line in description_lines[2:]:
+                if line.strip() == "":
+                    break
+                second_paragraph += line.strip().replace("\n", " ")
+            self.details = second_paragraph
+
         self._title = title
         self.tests = []
         self._start_counter = time.perf_counter()
@@ -574,6 +584,10 @@ class TestSuite:
         if os.path.exists(self.directory):
             shutil.rmtree(self.directory)
         os.makedirs(self.directory, exist_ok=False)
+
+        if self.requires_admin is True:
+            if platform.system() == "Windows" and not is_admin():
+                self.stop(" This script requires running with admin (root) privileges")
 
         self.state = {
             "title": title,
@@ -691,7 +705,7 @@ class TestSuite:
         create_reports(
             results_directory=self.directory,
             title=self._title,
-            description=self._description,
+            description=self.details,
         )
         return True
 
@@ -714,7 +728,7 @@ class TestSuite:
         with open(filepath, "r") as file_object:
             self.device = json.load(file_object)
 
-    def stop(self, force_fail=True):
+    def stop(self, force_fail=True, message=""):
         """Stop the TestSuite.
 
         Stops the suite when called.  By default will force the suite to fail.  If force_fail=False
@@ -726,7 +740,7 @@ class TestSuite:
 
         """
         self.__force_fail = force_fail
-        raise self.__Stop
+        raise self.__Stop(message)
 
     def update_summary(self):
         self.state = update_suite_summary(self.state)
@@ -734,9 +748,9 @@ class TestSuite:
     class __Stop(Exception):
         nvme_framework_exception = True
 
-        def __init__(self):
+        def __init__(self, message=""):
             log.frames("TestSuite.Stop", inspect.getouterframes(inspect.currentframe(), context=1))
-            log.info("----> TEST SUITE STOP", indent=False)
+            log.info(f"----> TEST SUITE STOP : {message}", indent=False)
             log.info("")
             super().__init__("TestSuite.Stop")
 

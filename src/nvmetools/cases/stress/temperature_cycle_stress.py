@@ -111,7 +111,4 @@ def temperature_cycle_stress(suite, cycles=2):
         # -----------------------------------------------------------------------------------------
         # Step : Read NVMe info and compare against starting info
         # -----------------------------------------------------------------------------------------
-        # This test reads the full information and verifies no counter decrements, static parameter
-        # changes, no critical warnings, and no error count increases.
-        # -----------------------------------------------------------------------------------------
         steps.test_end_info(test, start_info)

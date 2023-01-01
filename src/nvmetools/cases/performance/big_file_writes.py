@@ -8,55 +8,37 @@ import time
 from nvmetools import InfoSamples, TestCase, TestStep, fio, log, rqmts, steps
 from nvmetools.support.conversions import BYTES_IN_GB, BYTES_IN_GIB, BYTES_IN_KIB, MS_IN_SEC
 
-INFO_SAMPLES_MS = 1000  # Time between info samples
-INFO_SAMPLE_DELAY_SEC = 30  # Delay between start and stop of sampling and IO
-INFO_CMD_FILE = "state"  # cmd file that reads SMART and power state
-
-BLOCK_SIZE_KIB = 128
-queue_depth = 16
-FILE_WRITES = 2.5
-
-BURST_IO_SIZE = 2 * BYTES_IN_GIB
-BURST_DELAY_SEC = [16, 8, 4, 2, 1]
-INTER_BURST_DELAY_SEC = 30
-NUMBER_OF_BURST_OFFSETS = 6
-
-WAIT_FOR_IDLE_SEC = 180  # initial delay when test starts to guarantee idle state
-
-if False:
-    INFO_SAMPLE_DELAY_SEC = 5
-    INTER_BURST_DELAY_SEC = 5
-    NUMBER_OF_BURST_OFFSETS = 2
-    WAIT_FOR_IDLE_SEC = 5
-    FILE_WRITES = 1
-
 
 def big_file_writes(suite):
     """Measure performance of IO writes to big file."""
 
     with TestCase(suite, "Big file writes", big_file_writes.__doc__) as test:
 
+        test.data["file writes"] = FILE_WRITES = 2.5
+        test.data["block size kib"] = BLOCK_SIZE_KIB = 128
+        test.data["queue depth"] = QUEUE_DEPTH = 16
+        test.data["burst io size"] = BURST_IO_SIZE = 2 * BYTES_IN_GIB
+
+        test.data["burst delay sec"] = BURST_DELAY_SEC = [16, 8, 4, 2, 1]
+        test.data["inter burst delay sec"] = INTER_BURST_DELAY_SEC = 30
+        test.data["burst offsets"] = NUMBER_OF_BURST_OFFSETS = 6
+
+        test.data["wait for idle sec"] = WAIT_FOR_IDLE_SEC = 180
+
+        INFO_SAMPLE_DELAY_SEC = 5
+
         # -----------------------------------------------------------------------------------------
         # Step : Read NVMe info.  Stop test if critical warnings found.
         # -----------------------------------------------------------------------------------------
         start_info = steps.test_start_info(test)
 
+        test.data["disk size"] = float(start_info.parameters["Size"])
         # -----------------------------------------------------------------------------------------
         # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        # This step will stop the test if cannot find or create the file.  The test will use the
-        # big file.
-        # -----------------------------------------------------------------------------------------
         fio_file = steps.get_fio_big_file(test, disk_size=float(start_info.parameters["Size"]))
 
-        # log parameters into results file
-
-        test.data["disk size"] = float(start_info.parameters["Size"])
-        test.data["file size"] = fio_file.file_size
-        test.data["file writes"] = FILE_WRITES
-        test.data["file ratio"] = float(fio_file.file_size / float(start_info.parameters["Size"])) * 100.0
         test.data["io size"] = int(FILE_WRITES * test.data["file size"])
-
         # -----------------------------------------------------------------------------------------
         # Step : Run continuous sequential writes
         # -----------------------------------------------------------------------------------------
@@ -70,8 +52,8 @@ def big_file_writes(suite):
                 directory=step.directory,
                 wait=False,
                 samples=100000,
-                interval=INFO_SAMPLES_MS,
-                cmd_file=INFO_CMD_FILE,
+                interval=1000,
+                cmd_file="state",
             )
             log.debug(f"Waiting {INFO_SAMPLE_DELAY_SEC} seconds to start IO")
             time.sleep(INFO_SAMPLE_DELAY_SEC)
@@ -85,7 +67,7 @@ def big_file_writes(suite):
                 f"--filename={fio_file.filepath}",
                 f"--filesize={fio_file.file_size}",
                 "--rw=write",
-                f"--iodepth={queue_depth}",
+                f"--iodepth={QUEUE_DEPTH}",
                 f"--bs={BLOCK_SIZE_KIB*BYTES_IN_KIB}",
                 f"--output={os.path.join(step.directory,'fio.json')}",
                 "--output-format=json",
@@ -98,16 +80,6 @@ def big_file_writes(suite):
                 "--do_verify=0",
                 "--name=fio_cont_writes",
             ]
-            """
-                "--verify_interval=4096",
-                "--verify=crc32c",
-                "--verify_dump=1",
-                "--verify_state_save=0",
-                "--verify_async=2",
-                "--continue_on_error=verify",
-                "--verify_backlog=1",
-
-            """
 
             fio_result = fio.RunFio(fio_args, step.directory, suite.volume)
             rqmts.no_io_errors(step, fio_result)
@@ -138,8 +110,8 @@ def big_file_writes(suite):
                 directory=step.directory,
                 wait=False,
                 samples=100000,
-                interval=INFO_SAMPLES_MS,
-                cmd_file=INFO_CMD_FILE,
+                interval=1000,
+                cmd_file="state",
             )
             log.debug(f"Waiting {INFO_SAMPLE_DELAY_SEC} seconds to start IO")
             time.sleep(INFO_SAMPLE_DELAY_SEC)
@@ -171,7 +143,7 @@ def big_file_writes(suite):
                         f"--filesize={fio_file.file_size}",
                         "--allow_file_create=0",
                         "--rw=write",
-                        f"--iodepth={queue_depth}",
+                        f"--iodepth={QUEUE_DEPTH}",
                         f"--bs={BLOCK_SIZE_KIB*BYTES_IN_KIB}",
                         f"--offset={offset*BYTES_IN_GIB}",
                         f"--output={os.path.join(step.directory,f'fio_{delay}s_{offset}.json')}",
@@ -184,17 +156,6 @@ def big_file_writes(suite):
                         "--do_verify=0",
                         "--name=fio_burst_writes",
                     ]
-
-                    """
-                "--verify_interval=4096",
-                "--verify=crc32c",
-                "--verify_dump=1",
-                "--verify_state_save=0",
-                "--verify_async=2",
-                "--continue_on_error=verify",
-                "--verify_backlog=1",
-                "--do_verify=0",
-                    """
                     fio_result = fio.RunFio(fio_args, step.directory, suite.volume, file=f"fio_{delay}s_{offset}")
                     fio_io_errors += fio_result.io_errors
 

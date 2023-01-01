@@ -49,18 +49,10 @@ def short_burst_performance(suite):
         # -----------------------------------------------------------------------------------------
         # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        # This step will stop the test if cannot find or create the file.  The test requires the
-        # big file. Since this is a stress test it must check the data integrity so the file will
-        # be created with verify=True.  Note big files always have verify=True
-        # -----------------------------------------------------------------------------------------
         fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State
-        # -----------------------------------------------------------------------------------------
-        # Start reading SMART and Power State info at a regular interval until stopped.  This data
-        # can be used to plot temperature, bandwidth, power states, etc.  Only read SMART and Power
-        # State feature to limit impact of reading info on the IO performance
         # -----------------------------------------------------------------------------------------
         info_samples = steps.start_state_samples(test)
 
@@ -165,8 +157,5 @@ def short_burst_performance(suite):
 
         # -----------------------------------------------------------------------------------------
         # Step : Read NVMe info and compare against starting info
-        # -----------------------------------------------------------------------------------------
-        # This test reads the full information and verifies no counter decrements, static parameter
-        # changes, no critical warnings, and no error count increases.
         # -----------------------------------------------------------------------------------------
         steps.test_end_info(test, start_info)

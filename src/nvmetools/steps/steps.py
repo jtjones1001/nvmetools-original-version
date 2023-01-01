@@ -89,7 +89,7 @@ def get_fio_big_file(test, disk_size):
         test.data["file size"] = fio_file.file_size
         test.data["file size gb"] = fio_file.file_size / BYTES_IN_GB
         test.data["fio filepath"] = fio_file.os_filepath
-
+        test.data["file ratio"] = float(fio_file.file_size / float(disk_size)) * 100.0
     return fio_file
 
 
@@ -139,7 +139,7 @@ def get_fio_small_file(test):
     return fio_file
 
 
-def get_fio_stress_file(test, size):
+def get_fio_stress_file(test, disk_size):
     """Get or create a fio data file for IO reads and writes with verify.
 
     Args:
@@ -153,14 +153,14 @@ def get_fio_stress_file(test, size):
 
         fio_files = FioFiles(step.directory, test.suite.volume)
         if os.path.exists(fio_files.bigfile_path):
-            fio_file = fio_files.create(big=True, disk_size=float(size))
+            fio_file = fio_files.create(big=True, disk_size=float(disk_size))
         else:
             fio_file = fio_files.create(big=False, verify=True)
 
         test.data["file size"] = fio_file.file_size
         test.data["file size gb"] = fio_file.file_size / BYTES_IN_GB
         test.data["fio filepath"] = fio_file.os_filepath
-
+        test.data["file ratio"] = float(fio_file.file_size / float(disk_size)) * 100.0
     return fio_file
 
 

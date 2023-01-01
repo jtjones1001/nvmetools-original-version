@@ -1,7 +1,8 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Test and report framework.
+""" nvmetools package for reading information and testing NVMe drives.
+
 
 This package uses the following:
    - black formatter with the wider line length defined in pyproject.toml

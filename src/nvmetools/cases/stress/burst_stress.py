@@ -30,10 +30,6 @@ def burst_stress(suite, run_time_sec=5):
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State
         # -----------------------------------------------------------------------------------------
-        # Start reading SMART and Power State info at a regular interval until stopped.  This data
-        # can be used to plot temperature, bandwidth, power states, etc.  Only read SMART and Power
-        # State feature to limit impact of reading info on the IO performance
-        # -----------------------------------------------------------------------------------------
         info_samples = steps.start_state_samples(test)
 
         # -----------------------------------------------------------------------------------------
@@ -134,8 +130,5 @@ def burst_stress(suite, run_time_sec=5):
 
         # -----------------------------------------------------------------------------------------
         # Step : Read NVMe info and compare against starting info
-        # -----------------------------------------------------------------------------------------
-        # This test reads the full information and verifies no counter decrements, static parameter
-        # changes, no critical warnings, and no error count increases.
         # -----------------------------------------------------------------------------------------
         steps.test_end_info(test, start_info)
