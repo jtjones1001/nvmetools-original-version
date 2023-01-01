@@ -5,14 +5,12 @@
 
 .. highlight:: none
 
-The testnvme command passes the same standard parameters to each Test Suite::
+The testnvme command passes the same standard parameters to each Test Suite
 
-    nvme:           NVMe to test
-    volume:         Logical volume to test
-    loglevel:       Amount of detail to include in the logging
-    run_id:         ID to use for directory name
-    verbose:        Verbose log mode
-    debug:          Debug log mode
+    - nvme:          NVMe to test
+    - volume:        Logical volume to test
+    - loglevel:       Amount of detail to include in the logging
+    - run_id:         ID to use for directory name
 
 The first test case in every Test Suite is suite_start_info and the last test case is suite_end_info.
 

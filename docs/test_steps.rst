@@ -8,8 +8,8 @@ Information
 .. autofunction:: test_end_info
 .. autofunction:: start_state_samples
 
-Data file for fio
------------------
+IO Data File (fio)
+------------------
 .. autofunction:: create_fio_big_file
 .. autofunction:: create_fio_performance_file
 .. autofunction:: create_fio_small_file
