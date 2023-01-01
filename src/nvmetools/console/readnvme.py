@@ -144,7 +144,7 @@ def _parse_arguments():
         description=read_nvme.__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("-n", "--nvme", type=int, default=0, help="NVMe drive number (e.g. 0)", metavar="#")
+    parser.add_argument("-n", "--nvme", type=int, default=0, help="NVMe drive to read", metavar="#")
     parser.add_argument("-d", "--describe", help="Display parameter descriptions", action="store_true")
     parser.add_argument("-l", "--list", dest="as_list", help="Display parameters as list", action="store_true")
     parser.add_argument(
@@ -152,7 +152,7 @@ def _parse_arguments():
     )
     parser.add_argument("-a", "--all", dest="as_all", help="Display all parameters", action="store_true")
     parser.add_argument("-p", "--pdf", dest="create_pdf", help="Create a pdf report", action="store_true")
-    parser.add_argument("-v", "--verbose", help="Verbose display", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Display additional parameters", action="store_true")
     return vars(parser.parse_args())
 
 
@@ -180,7 +180,7 @@ def read_nvme(
     these options have no effect: --list, --all, and --description.
 
     The console output is logged to readnvme.log.  If the --pdf option is specified an
-    readnvme.pdf file is created.  All information is in the json file nvme.info.json.
+    readnvme.pdf file is created.
     """
     try:
         directory = os.path.join(os.path.abspath("."))

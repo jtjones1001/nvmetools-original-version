@@ -560,10 +560,9 @@ class TestSuite:
         self.test_number = 0
         self.data = {}
 
-        if self.run_id is None:
+        if self.uid is None:
             self.uid = f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        else:
-            self.uid = self.run_id
+
 
         self.directory = os.path.realpath(
             os.path.join(TEST_SUITE_DIRECTORY, title.lower().replace(" ", "_"), self.uid)

@@ -8,7 +8,7 @@
 Runs an NVME Test Suite defined in the nvmetools.suite package.
 
 Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  The directory name is
-defined by the run_id command line parameter.  If run_id was not specified the directory name is
+defined by the uid command line parameter.  If uid was not specified the directory name is
 based on the date and time the command was run.
 
 .. note::
@@ -18,7 +18,7 @@ Command Line Parameters
     --suite         Name of test suite to run
     --nvme, -n      Integer NVMe device number, can be found using listnvme.
     --volume, -v    Volume to test
-    --run_id, -i    String to use for the results directory name.
+    --uid, -i    String to use for the results directory name.
     --loglevel, -l  The amount of information to display, integer, 0 is least and 3 is most.
 
 **Example**
@@ -60,13 +60,13 @@ def main():
     displays the NVMe numbers to use.   The logical volume must reside on the physical NVMe drive
     specified.
 
-    Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  The directory name is
-    defined by the run_id command line parameter.  If run_id was not specified the directory name is
-    based on the date and time the command was run.
+    Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  TThe directory name is
+    defined by the uid argument.  If uid was not specified the directory name is defined by the date
+    and time the command was run.
     """
     try:
 
-        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog,max_help_position=50)
+        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50)
         parser = argparse.ArgumentParser(
             description=main.__doc__,
             formatter_class=formatter,
@@ -78,14 +78,24 @@ def main():
             "--nvme",
             required=True,
             type=int,
-            help="NVMe drive number (e.g. 0)",
+            help="NVMe drive to test",
             metavar="#",
         )
-        parser.add_argument("-v", "--volume", required=True, help="volume to test")
         parser.add_argument(
-            "-l", "--loglevel", type=int, default=1, metavar="#", help="level of detail in logging"
+            "-v",
+            "--volume",
+            required=True,
+            help="logical volume to test",
         )
-        parser.add_argument("-i", "--run_id", help="ID to use for directory name")
+        parser.add_argument(
+            "-l",
+            "--loglevel",
+            type=int,
+            default=1,
+            metavar="#",
+            help="level of detail in logging, 0 is least, 3 is most",
+        )
+        parser.add_argument("-i", "--uid", help="unique id for directory name")
 
         args = vars(parser.parse_args())
 

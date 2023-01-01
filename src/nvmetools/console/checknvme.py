@@ -9,7 +9,7 @@ Verifies the NVMe drive health by running the short self-test diagnostic, checki
 attributes for errors and log page 6 for prior self-test failures.
 
 Logs results to a directory in ~/Documents/nvmetools/suites/check_nvme.  The directory name is
-defined by the run_id command line parameter.  If run_id was not specified the directory name is
+defined by the uid command line parameter.  If uid was not specified the directory name is
 based on the date and time the command was run.
 
 .. note::
@@ -17,7 +17,7 @@ based on the date and time the command was run.
 
 Command Line Parameters
     --nvme, -n     Integer NVMe device number, can be found using listnvme.
-    --run_id, -i   String to use for the results directory name.
+    --uid, -i   String to use for the results directory name.
     --loglevel, -l  The amount of information to display, integer, 0 is least and 3 is most.
 
 **Example**
@@ -48,12 +48,14 @@ def main():
     Verifies the NVMe drive health by running the short self-test diagnostic, checking the SMART
     attributes for errors and log page 6 for prior self-test failures.
 
+    The NVMe to test must be specified.  The listnvme command displays the NVMe numbers to use.
+
     Logs results to a directory in ~/Documents/nvmetools/suites/check_nvme.  The directory name is
-    defined by the run_id command line parameter.  If run_id was not specified the directory name is
-    based on the date and time the command was run.
+    defined by the uid argument.  If uid was not specified the directory name is defined by the date
+    and time the command was run.
     """
     try:
-        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog,max_help_position=50)
+        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50)
         parser = argparse.ArgumentParser(
             description=main.__doc__,
             formatter_class=formatter,
@@ -64,11 +66,18 @@ def main():
             required=True,
             type=int,
             default=0,
-            help="NVMe drive number (e.g. 0)",
+            help="NVMe drive to check",
             metavar="#",
         )
-        parser.add_argument("-l", "--loglevel", type=int, default=1, help="level of detail in logging")
-        parser.add_argument("-i", "--run_id", help="ID to use for directory name")
+        parser.add_argument(
+            "-l",
+            "--loglevel",
+            type=int,
+            default=1,
+            help="level of detail in logging, 0 is least, 3 is most",
+            metavar="#",
+        )
+        parser.add_argument("-i", "--uid", help="unique id for directory name")
         args = vars(parser.parse_args())
 
         suites.health(args)
