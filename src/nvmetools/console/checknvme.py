@@ -16,8 +16,8 @@ based on the date and time the command was run.
    This command must be run as Administrator on Windows OS.
 
 Command Line Parameters
-    --nvme, -n     Integer NVMe device number, can be found using listnvme.
-    --uid, -i   String to use for the results directory name.
+    --nvme, -n      Integer NVMe device number, can be found using listnvme.
+    --uid, -i       String to use for the results directory name.  Must be unique.
     --loglevel, -l  The amount of information to display, integer, 0 is least and 3 is most.
 
 **Example**
@@ -48,17 +48,16 @@ def main():
     Verifies the NVMe drive health by running the short self-test diagnostic, checking the SMART
     attributes for errors and log page 6 for prior self-test failures.
 
-    The NVMe to test must be specified.  The listnvme command displays the NVMe numbers to use.
+    The NVMe to test must be specified.  Run the listnvme command to display the NVMe numbers.
 
     Logs results to a directory in ~/Documents/nvmetools/suites/check_nvme.  The directory name is
     defined by the uid argument.  If uid was not specified the directory name is defined by the date
     and time the command was run.
     """
     try:
-        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50)
         parser = argparse.ArgumentParser(
             description=main.__doc__,
-            formatter_class=formatter,
+            formatter_class=lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50),
         )
         parser.add_argument(
             "-n",

@@ -20,11 +20,11 @@ The amount and type of information displayed can be configured with command line
 
 The following log files are saved to the working directory:
 
-    * readnvme.log contains the console output
-    * nvme.info.json contains the NVMe parameters in json format
-    * readnvme.pdf is a PDF format report (only if --pdf specified)
-    * nvmecmd.trace.log and trace.log are trace file for debug if something goes wrong
-    * read.summary.json contains information on the Admin commands used
+    - readnvme.log contains the console output
+    - nvme.info.json contains the NVMe parameters in json format
+    - readnvme.pdf is a PDF format report (only if --pdf specified)
+    - nvmecmd.trace.log and trace.log are trace file for debug if something goes wrong
+    - read.summary.json contains information on the Admin commands used
 
 **Example**
 

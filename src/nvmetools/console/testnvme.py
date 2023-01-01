@@ -18,7 +18,7 @@ Command Line Parameters
     --suite         Name of test suite to run
     --nvme, -n      Integer NVMe device number, can be found using listnvme.
     --volume, -v    Volume to test
-    --uid, -i    String to use for the results directory name.
+    --uid, -i       String to use for the results directory name.  Must be unique.
     --loglevel, -l  The amount of information to display, integer, 0 is least and 3 is most.
 
 **Example**
@@ -56,20 +56,18 @@ def main():
 
     Runs an NVME Test Suite defined in the nvmetools.suite python package.
 
-    The test suite and the NVMe and logical volume to test must be specified.  The listnvme command
-    displays the NVMe numbers to use.   The logical volume must reside on the physical NVMe drive
+    The test suite and the NVMe and logical volume to test must be specified.  Run the listnvme
+    command to display the NVMe numbers.   The logical volume must reside on the physical NVMe drive
     specified.
 
-    Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  TThe directory name is
+    Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  The directory name is
     defined by the uid argument.  If uid was not specified the directory name is defined by the date
     and time the command was run.
     """
     try:
-
-        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50)
         parser = argparse.ArgumentParser(
             description=main.__doc__,
-            formatter_class=formatter,
+            formatter_class=lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50),
         )
         parser.add_argument("-s", "--suite", required=True, help="test suite to run")
 

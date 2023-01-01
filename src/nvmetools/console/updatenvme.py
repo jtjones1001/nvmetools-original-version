@@ -34,13 +34,11 @@ from nvmetools.support.framework import update_suite_files
 def main():
 
     try:
-        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50)
         parser = argparse.ArgumentParser(
-            description="Update NVMe Test Suite",
-            formatter_class=formatter,
+            description=main.__doc__,
+            formatter_class=lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=50),
         )
-
-        parser.add_argument("-d", "--directory", help="Test suite directory", default=".")
+        parser.add_argument("-d", "--directory", help="test suite directory", default=".")
 
         args = parser.parse_args()
 

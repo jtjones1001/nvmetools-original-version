@@ -19,11 +19,11 @@ structured as follows::
 
 The framework automatically runs a test suite and produces these three outputs:
 
-    - `Detailed text and json logs <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme/readnvme.log>`_
-    - `HTML dashboard  <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_all/readnvme.log>`_
-    - `Detailed report  <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_hex/readnvme.log>`_
+    -  `Detailed text and json logs  <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme/readnvme.log>`_
+    -  `HTML dashboard  <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_all/readnvme.log>`_
+    -  `Detailed report  <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/readnvme_hex/readnvme.log>`_
 
-Because this framework is command line driven and based on python it can easily be integrated into
+Because this framework is based on python and command line usage it can easily be integrated into
 existing automation frameworks, test databases such as TestRail, and log storage servers.
 
 """
@@ -415,7 +415,11 @@ class TestCase:
                 log.info("----> TEST FAILED", indent=False)
                 log.info("")
 
-        if hasattr(exc_value, "nvme_framework_exception"):
+        if (
+            exc_type is not self.__Stop
+            and exc_type is not self.__Skip
+            and hasattr(exc_value, "nvme_framework_exception")
+        ):
             return False
 
         if self.state["result"] == FAILED and self.suite.stop_on_fail:
@@ -562,7 +566,6 @@ class TestSuite:
 
         if self.uid is None:
             self.uid = f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
 
         self.directory = os.path.realpath(
             os.path.join(TEST_SUITE_DIRECTORY, title.lower().replace(" ", "_"), self.uid)
