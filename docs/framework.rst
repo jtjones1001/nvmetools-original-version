@@ -5,7 +5,6 @@ Test Framework
 TestSuite
 ---------
 .. autoclass:: TestSuite
-    :members:
 
 TestCase
 --------
