@@ -929,7 +929,7 @@ def verification(rqmt_id, step, title, verified, value):
         rqmt_id: Unique integer ID that identifies the requirement
         step:  The parent TestStep instance
         title: Title of the requirement
-        verifiedean, True if the requirement passes verification
+        verified: True if the requirement passes verification
         value:  Value to be reported as the result
 
     Verification is True if a requirement is met and False if not.  For example, the

@@ -1,39 +1,27 @@
 # --------------------------------------------------------------------------------------
 # Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Console command that updates test suites.
+"""Console command that updates test suite results.
 
-.. highlight:: none
+Test Suite results can be updated after completion by editing the results.json files.
+This command creates a new dashboard, PDF report, and updates the summaries in results.json to
+reflect any changes in the results.json files.
 
-This function updates the Test Suite after a user has manually updated the test results.
-This allows the user to enter manual results and then easily create a new dashboard and
-PDF report.
-
-To manually update a test result edit the results.json file in the test directory.  In
-the ["steps"] section find the step and verification to change.  Change the "result"
-parameter to "PASSED" or "FAILED".  Recommend completing the "reviewer" parameter and
-the "note" parameter with the reason for the change.
-
-This function updates the following files in a Test Suite:
-        results.json
-        dashboard.html
-        report.pdf
-        <test #>   results.json
+To update a test result edit the results.json file in the test directory.  In the ["steps"]
+section find the step and verification to change.  Change the verification's "result"
+to "PASSED" or "FAILED".  Recommend completing the "reviewer" and "note" parameters with the
+reason for the change.  After all results.json files have been updated run this command.
 
 Command Line Parameters
-    --directory, -d Directory of the test suite logs
-
-**Return Value**
-
-Returns 0 if the health check passes and non-zero if it fails.
+    --directory, -d     Directory of the test suite results to update
 
 **Example**
 
-This example updates the test suite for the current directory.
+    This example updates the test suite for the current directory.
 
-.. code-block:: python
+    .. code-block:: python
 
-   updatenvme .
+        updatenvme .
 
 """
 import argparse
