@@ -15,6 +15,9 @@ def short_burst_performance(suite):
     helpful in understanding drive performance across a variety of block sizes, queue depths,
     and IO patterns.   The four common IO patterns  are measured: sequential reads, sequential
     writes, random reads, and random writes.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Short Burst Performance", short_burst_performance.__doc__) as test:
 
@@ -44,13 +47,13 @@ def short_burst_performance(suite):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
         # This step will stop the test if cannot find or create the file.  The test requires the
         # big file. Since this is a stress test it must check the data integrity so the file will
         # be created with verify=True.  Note big files always have verify=True
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_performance_file(test)
+        fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State

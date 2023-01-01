@@ -21,6 +21,9 @@ def admin_commands(suite):
         Static parameters shall not change
         Counter parameters shall not decrement
         Dynamic parameters are not verified
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Admin commands", admin_commands.__doc__) as test:
 

@@ -10,6 +10,10 @@ def suite_end_info(suite, start_info):
     Verifies drive parameters change as expected across two readings.  Static parameters, such as
     Model and Serial Number, are verified not to change. SMART counter parameters, such as Power-On
     Hours, are verified not to decrease or reset.
+
+    Args:
+        suite:  Parent TestSuite instance
+        start_info: Instance of Info class with information from start of suite
     """
 
     with TestCase(suite, "Suite end info", suite_end_info.__doc__) as test:

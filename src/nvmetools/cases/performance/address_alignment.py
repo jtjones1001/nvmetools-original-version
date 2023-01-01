@@ -13,6 +13,9 @@ def address_alignment(suite):
     offset. Queue a large number of reads at different random addresses but with the same offset.
     Several different offsets are measured.  This provides details on the architecture of the device
     interleaving.  This is a performance measurement so no data verification is done.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Address alignment", address_alignment.__doc__) as test:
 
@@ -30,13 +33,13 @@ def address_alignment(suite):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
         # This step will stop the test if cannot find or create the file.  The test requires the
         # big file. Since this is a stress test it must check the data integrity so the file will
         # be created with verify=True.  Note big files always have verify=True
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_big_file(test, disk_size=float(start_info.parameters["Size"]))
+        fio_file = steps.get_fio_big_file(test, disk_size=float(start_info.parameters["Size"]))
 
         # -----------------------------------------------------------------------------------------
         # Step : Random reads at same offset

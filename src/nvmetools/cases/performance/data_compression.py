@@ -14,6 +14,9 @@ def data_compression(suite):
     The test measures the average latency for reads and writes using incompressible
     data (random data) and compressible data (all zeros).  Drives that implement
     data compression will have lower latency on compressible data.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Data compression", data_compression.__doc__) as test:
 
@@ -22,14 +25,14 @@ def data_compression(suite):
         test.data["io size gib"] = IO_SIZE_GIB = 2
 
         # -----------------------------------------------------------------------------------------
-        # Step : Read NVMe info and rqmts no critical warnings, stop test on fail
+        # Step : Read NVMe info and verify no critical warnings, stop test on fail
         # -----------------------------------------------------------------------------------------
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Create a big data file for fio to use, stop test on fail
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_big_file(test, disk_size=float(start_info.parameters["Size"]))
+        fio_file = steps.get_fio_big_file(test, disk_size=float(start_info.parameters["Size"]))
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State

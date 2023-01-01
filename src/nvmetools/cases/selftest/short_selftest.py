@@ -13,6 +13,9 @@ def short_selftest(suite):
     """Verify short self-test functionality.
 
     The test verifies verifies the short self-test passes and functions as expected.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Short selftest", short_selftest.__doc__) as test:
 
@@ -34,9 +37,9 @@ def short_selftest(suite):
 
             rqmts.no_critical_warnings(step, start_info)
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_small_file(test)
+        fio_file = steps.get_fio_small_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Run self-test standalone using nvmecmd

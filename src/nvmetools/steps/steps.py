@@ -69,7 +69,7 @@ def test_end_info(test, start_info):
     return end_info
 
 
-def create_fio_big_file(test, disk_size):
+def get_fio_big_file(test, disk_size):
     """Get or create a big fio data file for IO reads and writes.
 
     Args:
@@ -93,7 +93,7 @@ def create_fio_big_file(test, disk_size):
     return fio_file
 
 
-def create_fio_performance_file(test):
+def get_fio_performance_file(test):
     """Get or create a fio data file for IO reads and writes without verify.
 
     Args:
@@ -116,7 +116,7 @@ def create_fio_performance_file(test):
     return fio_file
 
 
-def create_fio_small_file(test):
+def get_fio_small_file(test):
     """Get or create a fio data file for IO reads and writes with verify.
 
     Args:
@@ -139,11 +139,12 @@ def create_fio_small_file(test):
     return fio_file
 
 
-def create_fio_stress_file(test, size):
+def get_fio_stress_file(test, size):
     """Get or create a fio data file for IO reads and writes with verify.
 
     Args:
         test: Parent TestCase instance
+        disk_size:  Size of disk in bytes
 
     """
     with TestStep(test, "Create fio file", "Use big file if exists, else use or create a small file.") as step:

@@ -14,6 +14,9 @@ def long_burst_performance_full(suite):
       3) idle to ensure device return to idle temperature
 
     The volume provided (volume) must exist on the physical device provided (nvme).
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Long Burst Performance Full Drive", long_burst_performance_full.__doc__) as test:
 
@@ -29,13 +32,13 @@ def long_burst_performance_full(suite):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
         # This step will stop the test if cannot find or create the file.  The test requires the
         # big file. Since this is a stress test it must check the data integrity so the file will
         # be created with verify=True.  Note big files always have verify=True
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_performance_file(test)
+        fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Multiple Steps : Run the bursts with the target IO types

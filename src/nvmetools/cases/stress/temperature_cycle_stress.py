@@ -11,6 +11,9 @@ def temperature_cycle_stress(suite, cycles=2):
     """Verify drive reliability under temperature cycle IO stress.
 
     The test verifies drive reliability under IO stress designed to temperature cycle the drive.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Temperature cycle stress", temperature_cycle_stress.__doc__) as test:
 
@@ -20,16 +23,12 @@ def temperature_cycle_stress(suite, cycles=2):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_stress_file(test, start_info.parameters["Size"])
+        fio_file = steps.get_fio_stress_file(test, start_info.parameters["Size"])
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State
-        # -----------------------------------------------------------------------------------------
-        # Start reading SMART and Power State info every seconds until stopped.  This data
-        # can be used to plot temperature, bandwidth, power states, etc.  Only read SMART and Power
-        # State feature to limit impact of reading info on the IO performance
         # -----------------------------------------------------------------------------------------
         info_samples = steps.start_state_samples(test)
 

@@ -10,7 +10,11 @@ DELAYED_LATENCY_IOS = 16
 
 
 def read_buffer(suite):
-    """Measure performance of sequential reads to same address."""
+    """Measure performance of sequential reads to same address.
+
+    Args:
+        suite:  Parent TestSuite instance
+    """
 
     with TestCase(suite, "Read buffer", read_buffer.__doc__) as test:
 
@@ -20,12 +24,12 @@ def read_buffer(suite):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
         # This step will stop the test if cannot find or create the file.  The test will use the
         # small file with Verify=False
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_performance_file(test)
+        fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Create and run the IO trace file

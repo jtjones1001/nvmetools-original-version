@@ -8,7 +8,11 @@ from nvmetools import TestCase, TestStep, fio, log, rqmts, steps
 
 
 def big_file_reads(suite):
-    """Measure performance of IO reads to big file."""
+    """Measure performance of IO reads to big file.
+
+    Args:
+        suite:  Parent TestSuite instance
+    """
 
     with TestCase(suite, "Big file reads", big_file_reads.__doc__) as test:
 
@@ -18,12 +22,12 @@ def big_file_reads(suite):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
         # This step will stop the test if cannot find or create the file.  The test will use the
         # big file eventhough the test does not check data integrity.
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_big_file(test, disk_size=float(start_info.parameters["Size"]))
+        fio_file = steps.get_fio_big_file(test, disk_size=float(start_info.parameters["Size"]))
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State

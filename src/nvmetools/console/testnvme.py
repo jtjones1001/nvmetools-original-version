@@ -43,7 +43,7 @@ Command Line Parameters
     - `Example report (report.pdf) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf>`_
     - `Example dashboard (dashboard.html) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/checknvme.log>`_
 
-"""
+"""  # noqa: E501
 import argparse
 import sys
 
@@ -56,9 +56,9 @@ def main():
 
     Runs an NVME Test Suite defined in the nvmetools.suite python package.
 
-    The test suite and the NVMe and logical volume to test must be specified.  Run the listnvme
+    The test suite, NVMe to test, and logical volume to test must be specified.  Run the listnvme
     command to display the NVMe numbers.   The logical volume must reside on the physical NVMe drive
-    specified.
+    being tested.
 
     Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  The directory name is
     defined by the uid argument.  If uid was not specified the directory name is defined by the date

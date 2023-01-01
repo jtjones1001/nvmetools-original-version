@@ -73,9 +73,9 @@ def timestamp(suite):
             )
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_small_file(test)
+        fio_file = steps.get_fio_small_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State

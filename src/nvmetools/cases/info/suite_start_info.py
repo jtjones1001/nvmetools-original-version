@@ -17,6 +17,9 @@ def suite_start_info(suite):
 
     This test should be run at the start of suite so the info can be referenced at the end of the
     suite.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Suite start info", suite_start_info.__doc__) as test:
 

@@ -20,6 +20,9 @@ def smart_data(suite):
     specified resides on the physical nvme specified.
 
     The SMART attributes are only accurate to 512,000 bytes.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "SMART data", smart_data.__doc__) as test:
 
@@ -30,7 +33,7 @@ def smart_data(suite):
         # -----------------------------------------------------------------------------------------
         # Step : Create fio file if does not already exist
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_performance_file(test)
+        fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Get start info

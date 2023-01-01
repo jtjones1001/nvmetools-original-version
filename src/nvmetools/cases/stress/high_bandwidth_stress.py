@@ -14,6 +14,9 @@ def high_bandwidth_stress(suite, run_time_sec=180):
     doing reads and writes with a large block size and queue depth.  The goal of this test is to
     maximize the data being read and written and verify the drive is reliable.  During this test
     the drive temperature should be high and throttling may occur.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "High bandwidth stress", high_bandwidth_stress.__doc__) as test:
 
@@ -23,9 +26,9 @@ def high_bandwidth_stress(suite, run_time_sec=180):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_stress_file(test, start_info.parameters["Size"])
+        fio_file = steps.get_fio_stress_file(test, start_info.parameters["Size"])
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State

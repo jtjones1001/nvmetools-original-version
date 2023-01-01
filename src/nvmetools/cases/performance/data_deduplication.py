@@ -27,6 +27,9 @@ def data_deduplication(suite):
     The test measures the average latency for writes using unique data (different random data for
     every block) and repeating data (same random data for every block).  Drives that implement
     data deduplication will have lower latency on duplicate data.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Data deduplication", data_deduplication.__doc__) as test:
 
@@ -40,12 +43,12 @@ def data_deduplication(suite):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
         # This step will stop the test if cannot find or create the file.  The test will use the
         # small performance file without verify
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_performance_file(test)
+        fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State

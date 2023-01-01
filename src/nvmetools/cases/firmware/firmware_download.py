@@ -14,4 +14,4 @@ def firmware_download(suite):
         suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Firmware download", firmware_download.__doc__) as test:
-        test.skip()
+        test.skip("Firmware file was not found.")

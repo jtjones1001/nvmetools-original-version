@@ -14,6 +14,9 @@ def short_diagnostic(suite):
     The short Self-test is a diagnostic testing sequence that tests the integrity and functionality of the
     controller and may include testing of the media associated with namespaces.   The run time is 2 minutes
     or less. The results are reported in Log Page 6 during and after the self-test."
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Short diagnostic", short_diagnostic.__doc__) as test:
 

@@ -11,7 +11,11 @@ from nvmetools.support.conversions import NS_IN_MS
 
 
 def aspm_latency(suite):
-    """Measure IO latency with ASPM enabled and disabled."""
+    """Measure IO latency with ASPM enabled and disabled.
+
+    Args:
+        suite:  Parent TestSuite instance
+    """
 
     with TestCase(suite, "ASPM latency", aspm_latency.__doc__) as test:
 
@@ -28,7 +32,7 @@ def aspm_latency(suite):
         # -----------------------------------------------------------------------------------------
         # Step : Create a performance data file for fio to use, stop test on fail
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_performance_file(test)
+        fio_file = steps.get_fio_performance_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Multiple Steps : Run IO with different think times

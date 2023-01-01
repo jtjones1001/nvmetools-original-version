@@ -22,6 +22,9 @@ def background_smart(suite):
     the commands is verified as follows:
 
         Dynamic parameters have no requirement
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Background SMART", background_smart.__doc__) as test:
 
@@ -33,7 +36,7 @@ def background_smart(suite):
         # -----------------------------------------------------------------------------------------
         # Step : Create fio file if does not already exist
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_small_file(test)
+        fio_file = steps.get_fio_small_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Wait to ensure drive is back to idle temperature and no garbage collection underway

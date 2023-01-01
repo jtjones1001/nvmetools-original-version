@@ -11,7 +11,11 @@ from nvmetools.support.conversions import NS_IN_MS
 
 
 def nonop_power_times(suite):
-    """Verify exit latency and entry timeout of non-op power states."""
+    """Verify exit latency and entry timeout of non-op power states.
+
+    Args:
+        suite:  Parent TestSuite instance
+    """
 
     with TestCase(suite, "Nonop power times", nonop_power_times.__doc__) as test:
 
@@ -28,7 +32,7 @@ def nonop_power_times(suite):
         # -----------------------------------------------------------------------------------------
         # Step : Create a performance data file for fio to use, stop test on fail
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_performance_file(test)
+        fio_file = steps.get_fio_performance_file(test)
         # -----------------------------------------------------------------------------------------
         # Multiple Steps : Run IO with different think times
         # -----------------------------------------------------------------------------------------

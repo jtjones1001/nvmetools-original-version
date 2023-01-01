@@ -11,6 +11,9 @@ def burst_stress(suite, run_time_sec=5):
     """Verify drive reliability under burst IO.
 
     The test verifies drive reliability by running short bursts of IO stress for an extended time.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Burst stress", burst_stress.__doc__) as test:
 
@@ -20,9 +23,9 @@ def burst_stress(suite, run_time_sec=5):
         start_info = steps.test_start_info(test)
 
         # -----------------------------------------------------------------------------------------
-        # Step: Create the file for fio to read and write
+        # Step: Get the file for fio to read and write
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_stress_file(test, start_info.parameters["Size"])
+        fio_file = steps.get_fio_stress_file(test, start_info.parameters["Size"])
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State

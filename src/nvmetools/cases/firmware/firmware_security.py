@@ -9,6 +9,9 @@ def firmware_security(suite):
 
     Verifies invalid files cannot be downloaded and activated, partial downloads cannot be activated
     etc.
+
+    Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Firmware security", firmware_security.__doc__) as test:
-        test.skip()
+        test.skip("Firmware file was not found.")

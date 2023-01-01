@@ -17,6 +17,9 @@ def read_disturb_stress(suite):
 
     After the same page has been read several million times all of the pages are
     read and verified.
+
+     Args:
+        suite:  Parent TestSuite instance
     """
     with TestCase(suite, "Read disturb stress", read_disturb_stress.__doc__) as test:
 
@@ -36,7 +39,7 @@ def read_disturb_stress(suite):
         # -----------------------------------------------------------------------------------------
         # Step : Create a small data file for fio to use, stop test on fail
         # -----------------------------------------------------------------------------------------
-        fio_file = steps.create_fio_small_file(test)
+        fio_file = steps.get_fio_small_file(test)
 
         # -----------------------------------------------------------------------------------------
         # Step : Start sampling SMART and Power State
