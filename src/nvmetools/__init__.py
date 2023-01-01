@@ -15,7 +15,8 @@ To release package to test pypi:
 To update the Read The Docs (RTD) documentation (https://readthedocs.org):
    - update the files in docs directory and RTD will build the documentation when checked into github
    - Documentation location:  https://nvmetools.readthedocs.io/en/latest/
-   - To test build the documentation sphinx-build -b html docs docs/build/html, then open
+   - To test build the documentation
+       sphinx-build -b html docs docs/build/html, then open
      docs/build/html/index.html in browser
    - See...
       - The Google Docstring format.  Style Guide:  http://google.github.io/styleguide/pyguide.html

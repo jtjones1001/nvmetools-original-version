@@ -6,7 +6,6 @@ import re
 
 sys.path.insert(0, os.path.abspath('../src'))
 
-
 autodoc_mock_imports = ['numpy','psutil','matplotlib','cycler','reportlab']
 autoclass_content = "init"
 
@@ -19,10 +18,10 @@ copyright = "2023 Joseph Jones"
 language = 'en'
 
 extensions = [
-    'sphinx.ext.intersphinx',
+ #   'sphinx.ext.intersphinx',
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.mathjax',
+ #   'sphinx.ext.autosummary',
+ #   'sphinx.ext.mathjax',
   #  'sphinx.ext.viewcode',
     'sphinx_rtd_theme',
     'sphinx.ext.napoleon'
@@ -32,11 +31,12 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 exclude_patterns = []
 locale_dirs = ['locale/']
-gettext_compact = False
+#gettext_compact = False
 
-master_doc = 'index'
-suppress_warnings = ['image.nonlocal_uri']
-pygments_style = 'default'
+#master_doc = 'index'
+#suppress_warnings = ['image.nonlocal_uri']
+
+#pygments_style = 'default'
 
 
 html_theme = 'sphinx_rtd_theme'
