@@ -11,10 +11,6 @@ Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  The direct
 defined by the run_id command line parameter.  If run_id was not specified the directory name is
 based on the date and time the command was run.
 
-The debug and verbose parameters enable additional logging and keeps additional files for the
-purpose of debugging the script or device failure.  The full debug output is alway saved in the
-debug.log regardless of these parameters.
-
 .. note::
    Test Suites with self-test tests must be run as Administrator on Windows OS.
 
@@ -27,14 +23,25 @@ Command Line Parameters
 
 **Example**
 
-This example runs a Test Suite called short_demo on NVMe 1.
+    This example runs a Test Suite called short_demo on NVMe 1.
 
-.. code-block:: python
+    .. code-block:: python
 
-   testnvme  short_demo  --nvme 0  --volume c:
+        testnvme  short_demo  --nvme 1  --volume /mnt/nvme1a
 
-* `Example report (nvme_health_check.pdf) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf>`_
-* `Example console output (checknvme.log) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/checknvme.log>`_
+    - `Example report (report.pdf) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf>`_
+    - `Example dashboard (dashboard.html) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/checknvme.log>`_
+
+**Example**
+
+    This example runs a Test Suite called big_demo on NVMe 1.
+
+    .. code-block:: python
+
+        testnvme  big_demo  --nvme 1 --volume g:
+
+    - `Example report (report.pdf) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/nvme_health_check.pdf>`_
+    - `Example dashboard (dashboard.html) <https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/checknvme/checknvme.log>`_
 
 """
 import argparse
@@ -47,22 +54,37 @@ import nvmetools.support.console as console
 def main():
     """Runs NVMe Test Suite.
 
+    Runs an NVME Test Suite defined in the nvmetools.suite python package.
+
+    The test suite and the NVMe and logical volume to test must be specified.  The listnvme command
+    displays the NVMe numbers to use.   The logical volume must reside on the physical NVMe drive
+    specified.
+
     Logs results to a directory in ~/Documents/nvmetools/suites/<suite>.  The directory name is
     defined by the run_id command line parameter.  If run_id was not specified the directory name is
     based on the date and time the command was run.
     """
     try:
+
+        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog,max_help_position=50)
         parser = argparse.ArgumentParser(
             description=main.__doc__,
-            formatter_class=argparse.RawDescriptionHelpFormatter,
+            formatter_class=formatter,
         )
-        parser.add_argument("suite", help="test suite")
+        parser.add_argument("-s", "--suite", required=True, help="test suite to run")
 
         parser.add_argument(
-            "-n", "--nvme", required=True, type=int, default=0, help="NVMe drive number (e.g. 0)", metavar="#"
+            "-n",
+            "--nvme",
+            required=True,
+            type=int,
+            help="NVMe drive number (e.g. 0)",
+            metavar="#",
         )
         parser.add_argument("-v", "--volume", required=True, help="volume to test")
-        parser.add_argument("-l", "--loglevel", type=int, default=1, help="volume to test")
+        parser.add_argument(
+            "-l", "--loglevel", type=int, default=1, metavar="#", help="level of detail in logging"
+        )
         parser.add_argument("-i", "--run_id", help="ID to use for directory name")
 
         args = vars(parser.parse_args())

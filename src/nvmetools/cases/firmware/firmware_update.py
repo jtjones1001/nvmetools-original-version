@@ -11,4 +11,4 @@ def firmware_update(suite):
     Assumes update without reset.
     """
     with TestCase(suite, "Firmware update", firmware_update.__doc__) as test:
-        raise test.Skip
+        test.skip()

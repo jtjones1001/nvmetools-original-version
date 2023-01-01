@@ -188,7 +188,7 @@ class TestStep:
             self.test.state["steps"].append(self.state)
 
             # if step stop then it was handled, else send to parent test case
-            if exc_type is not self.Stop:
+            if exc_type is not self.__Stop:
                 return False
 
         # Stopped with unknown exception, forward to parent test case
@@ -363,7 +363,7 @@ class TestCase:
         fail_steps = sum(step["result"] is not PASSED for step in self.state["steps"])
 
         if exc_type is None or hasattr(exc_value, "nvme_framework_exception"):
-            if exc_type is self.Skip:
+            if exc_type is self.__Skip:
                 self.state["result"] = SKIPPED
             elif self.__force_fail or fail_steps > 0:
                 self.state["result"] = FAILED
@@ -415,7 +415,7 @@ class TestCase:
                 log.info("----> TEST FAILED", indent=False)
                 log.info("")
 
-        if exc_type is self.suite.Stop:
+        if hasattr(exc_value, "nvme_framework_exception"):
             return False
 
         if self.state["result"] == FAILED and self.suite.stop_on_fail:
@@ -639,7 +639,7 @@ class TestSuite:
         fail_tests = sum(test["result"] is not PASSED for test in self.state["tests"])
         aborted_tests = sum(test["result"] is ABORTED for test in self.state["tests"])
 
-        if exc_type is None or exc_type is self.Stop:
+        if exc_type is None or exc_type is self.__Stop:
             if aborted_tests == 0:
                 self.state["complete"] = True
 

@@ -53,9 +53,10 @@ def main():
     based on the date and time the command was run.
     """
     try:
+        formatter = lambda prog: argparse.RawDescriptionHelpFormatter(prog,max_help_position=50)
         parser = argparse.ArgumentParser(
             description=main.__doc__,
-            formatter_class=argparse.RawDescriptionHelpFormatter,
+            formatter_class=formatter,
         )
         parser.add_argument(
             "-n",
@@ -66,7 +67,7 @@ def main():
             help="NVMe drive number (e.g. 0)",
             metavar="#",
         )
-        parser.add_argument("-l", "--loglevel", type=int, default=1, help="volume to test")
+        parser.add_argument("-l", "--loglevel", type=int, default=1, help="level of detail in logging")
         parser.add_argument("-i", "--run_id", help="ID to use for directory name")
         args = vars(parser.parse_args())
 

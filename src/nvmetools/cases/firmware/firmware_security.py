@@ -11,4 +11,4 @@ def firmware_security(suite):
     etc.
     """
     with TestCase(suite, "Firmware security", firmware_security.__doc__) as test:
-        raise test.Skip
+        test.skip()
