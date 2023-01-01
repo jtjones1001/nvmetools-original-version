@@ -1,16 +1,20 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
-"""Console command that lists the NVMe drives in the system.
+"""Console command that lists NVMe drives in the system.
 
 .. highlight:: none
 
-Displays the NVMe drives in the system.  Each drive has a unique 'NVMe number' that identifies that
-specific NVMe.  The other console commands require this number to know which NVMe drive to read or
-test.
+Assigns each NVMe drive an NVMe number.  On Windows, the NVMe number is the same as the physical drive number
+(2 = physicaldrive2) and on linux it is the /dev/nvme# number (3 = /dev/nvme3).
 
-On Windows, the NVMe number is the same as the physical drive number (2 = physicaldrive2).  On linux
-the NVMe number is the /dev/nvme number (3 = /dev/nvme3).
+**Command Line Parameters**
+
+    There are no command line parameters
+
+**Return Value**
+
+    Returns 0 if passes and non-zero if it fails.
 
 **Example**
 
@@ -41,17 +45,19 @@ import logging
 import os
 import sys
 
-
-from nvmetools.support.console import exit_on_exception
-from nvmetools.support.info import Info
+from nvmetools.apps.nvmecmd import check_nvmecmd_permissions
+from nvmetools.info import Info
+from nvmetools.support.exit import exit_on_exception
 from nvmetools.support.log import start_logger
 
 
-def main():
+def main() -> None:
     """List NVMe drives in the system."""
     try:
         directory = os.path.join(os.path.abspath("."))
         log = start_logger(directory, logging.INFO, "listnvme.log")
+
+        check_nvmecmd_permissions()
 
         info = Info(nvme="*", directory=directory)
 

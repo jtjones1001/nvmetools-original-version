@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 r"""Define functions for using nvmecmd utility.
 
@@ -34,6 +34,8 @@ import os
 import platform
 
 from nvmetools import SRC_DIRECTORY
+from nvmetools.nvme_test import NvmeTest, verify_requirement
+from nvmetools.settings import LINEAR_LIMIT, RqmtId
 from nvmetools.support.conversions import (
     MS_IN_MIN,
     MS_IN_SEC,
@@ -45,8 +47,6 @@ from nvmetools.support.conversions import (
     is_debug,
 )
 from nvmetools.support.process import RunProcess
-
-LINEAR_LIMIT = 0.9
 
 NVMECMD_DIR = os.path.join(SRC_DIRECTORY, "nvmetools", "resources", "nvmecmd")
 
@@ -68,14 +68,14 @@ NVMECMD_EXT_SELFTEST_CMD = os.path.join(NVMECMD_DIR, "extended-self-test.cmd.jso
 
 
 class _NoNvme(Exception):
-    def __init__(self, nvme):
+    def __init__(self, nvme: int) -> None:
         self.code = 51
         self.nvmetools = True
         super().__init__(f" NVME device {nvme} was not found.")
 
 
 class _NvmecmdBadJson(Exception):
-    def __init__(self, error, file):
+    def __init__(self, error: Exception, file: str) -> None:
         self.code = 52
         self.nvmetools = True
         error_msg = f"{file} @line {error.lineno} @col {error.colno}"
@@ -83,7 +83,7 @@ class _NvmecmdBadJson(Exception):
 
 
 class _NvmecmdException(Exception):
-    def __init__(self, directory):
+    def __init__(self, directory: str) -> None:
         self.code = 53
         self.nvmetools = True
         tracelog = os.path.join(directory, TRACE_LOG)
@@ -93,18 +93,18 @@ class _NvmecmdException(Exception):
 class NvmecmdPermissionError(Exception):
     """Custom exception to indicate nvmecmd missing permission."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize exception."""
         self.code = 54
         self.nvmetools = True
         error_msg = " nvmecmd utility does not have permission to access NVMe.\n\n"
-        error_msg += " To give permission run these commands:\n\n"
+        error_msg += " To give permission run these commands:\n"
         error_msg += f"  sudo chmod 777 {NVMECMD_EXEC} \n"
         error_msg += f"  sudo setcap cap_sys_admin,cap_dac_override=ep {NVMECMD_EXEC} \n"
         super().__init__(error_msg)
 
 
-def check_nvmecmd_permissions():
+def check_nvmecmd_permissions() -> None:
     """Check nvmecmd permission to read NVMe device."""
     if "Windows" != platform.system():
         attribute = "security.capability"
@@ -134,20 +134,20 @@ class Read:
 
     def __init__(
         self,
-        nvme=0,
-        directory=".",
-        samples=1,
-        interval=0,
-        cmd_file="read",
-        wait=True,
-    ):
+        nvme: int = 0,
+        directory: str = ".",
+        samples: int = 1,
+        interval: int = 0,
+        cmd_file: str = "read",
+        wait: bool = True,
+    ) -> None:
         """Start reading information.
 
         Args:
            nvme: NVMe device number.
            directory: Directory to log results.
            samples: Number of samples to read.
-           intervalerval between samples in mS.
+           interval: Interval between samples in mS.
            cmd_file: Name of cmd file to use for the read.
            wait:  Waits for read to complete if True.
         """
@@ -182,7 +182,7 @@ class Read:
         if wait:
             self.wait()
 
-    def wait(self):
+    def wait(self) -> int:
         """Wait for information to be ready.
 
         Returns:
@@ -220,7 +220,7 @@ class Read:
 
         return self.return_code
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop reading information gracefully.
 
         Stops the read when doing multiple samples by stopping the nvmecmd process.
@@ -237,7 +237,7 @@ class Selftest:
        data (dictionary): Dictionary of parameters
     """
 
-    def __init__(self, nvme, directory, extended=False, limit_min=2):
+    def __init__(self, nvme: int, directory: str, extended: bool = False, limit_min: int = 2) -> None:
         """Run self-test diagnostic.
 
         Args:
@@ -308,3 +308,69 @@ class Selftest:
         if not is_debug() and self.data["return code"] == 0:
             tracelog = os.path.join(directory, TRACE_LOG)
             os.remove(tracelog)
+
+    def verify(self, test: NvmeTest) -> int:
+        """Verify result of self-test.
+
+        Args:
+           test (NVMeTest):  NvmeTest instance to update with requirement results.
+        """
+        if self._extended:
+            selftest_type = "Extended"
+        else:
+            selftest_type = "Short"
+
+        failed_verifications = 0
+
+        verify_requirement(
+            RqmtId.EXT_SELFTEST_RESULT if self._extended else RqmtId.SELFTEST_RESULT,
+            name=f"{selftest_type} Self-test result is 0 (no errors)",
+            limit=0,
+            value=self.data["return code"],
+            passed=(int(self.data["return code"]) == 0),
+            test=test,
+        )
+        verify_requirement(
+            RqmtId.EXT_SELFTEST_RUNTIME if self._extended else RqmtId.SELFTEST_RUNTIME,
+            name=f"{selftest_type} Self-test run time less than specified",
+            limit=f"{self.data['runtime limit']} Min",
+            value="N/A" if "logfile" not in self.data else self.data["runtime"],
+            passed=(False if "logfile" not in self.data else (self.data["runtime"] < self.data["runtime limit"])),
+            test=test,
+        )
+        verify_requirement(
+            RqmtId.EXT_SELFTEST_MONOTONICITY if self._extended else RqmtId.SELFTEST_MONOTONICITY,
+            name=f"{selftest_type} Self-test progress is monotonic",
+            limit="Monotonic",
+            value="N/A" if "logfile" not in self.data else self.data["monotonic"],
+            passed=False if "logfile" not in self.data else (self.data["monotonic"] == "Monotonic"),
+            test=test,
+        )
+        verify_requirement(
+            RqmtId.EXT_SELFTEST_LINEARITY if self._extended else RqmtId.SELFTEST_LINEARITY,
+            name=f"{selftest_type} Self-test progress is roughly linear (Coeff > {LINEAR_LIMIT})",
+            limit=LINEAR_LIMIT,
+            value="N/A" if "logfile" not in self.data else self.data["linear"],
+            passed=(False if "logfile" not in self.data else (self.data["linear"] > LINEAR_LIMIT)),
+            test=test,
+        )
+        verify_requirement(
+            RqmtId.EXT_SELFTEST_HOURS if self._extended else RqmtId.SELFTEST_HOURS,
+            name=f"{selftest_type} Self-test Power-On Hours match hours reported in log page 2",
+            limit=(
+                "N/A"
+                if "logfile" not in self.data
+                else f"{self.data['second_last_poh']} - {self.data['last_poh']}",
+            ),
+            value="N/A" if "logfile" not in self.data else self.data["result_poh"],
+            passed=(
+                False
+                if "logfile" not in self.data
+                else (
+                    (self.data["result_poh"] == self.data["last_poh"])
+                    or (self.data["result_poh"] == self.data["second_last_poh"])
+                )
+            ),
+            test=test,
+        )
+        return failed_verifications
