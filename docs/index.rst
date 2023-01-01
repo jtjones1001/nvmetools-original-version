@@ -17,16 +17,16 @@ The nvmetools python package to read and test NVMe drives.
         test_commands
 
 .. toctree::
-    :maxdepth: 3
-    :caption: Test Developer
-    :hidden:
+        :maxdepth: 2
+        :caption: Test Developer
+        :hidden:
 
-    framework
-    test_suites
-    test_cases
-    test_steps
-    verifications
-    information
+        framework
+        test_suites
+        test_cases
+        test_steps
+        verifications
+        information
 
 
 
