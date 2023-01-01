@@ -1,34 +1,69 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+# -*- coding: utf-8 -*-
 
-import os
 import sys
+import os
+import re
+
 sys.path.insert(0, os.path.abspath('../src'))
 
 autodoc_mock_imports = ['numpy','psutil','matplotlib','cycler','reportlab']
-
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
-project = 'nvmetools'
-copyright = '2022, Joe Jones'
-author = 'Joe Jones'
-version = '0.2.1'
-release = version
-
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-
-extensions = ['sphinx.ext.autodoc','sphinx.ext.napoleon']
-
-templates_path = ['_templates']
-exclude_patterns = []
-
 autoclass_content = "init"
 
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+project = u'nvmetools'
+slug = re.sub(r'\W+', '-', project.lower())
+version = "0.3.0"
+release = version
+author = u'Joe Jones'
+copyright = "2023 Joseph Jones"
+language = 'en'
+
+extensions = [
+ #   'sphinx.ext.intersphinx',
+    'sphinx.ext.autodoc',
+ #   'sphinx.ext.autosummary',
+ #   'sphinx.ext.mathjax',
+  #  'sphinx.ext.viewcode',
+    'sphinx_rtd_theme',
+    'sphinx.ext.napoleon'
+]
+
+templates_path = ['_templates']
+source_suffix = '.rst'
+exclude_patterns = []
+locale_dirs = ['locale/']
+gettext_compact = False
+toc_object_entries = False
+
+#master_doc = 'index'
+#suppress_warnings = ['image.nonlocal_uri']
+
+#pygments_style = 'default'
+
 
 html_theme = 'sphinx_rtd_theme'
+html_theme_options = {
+    'logo_only': False,
+    'navigation_depth': 5,
+}
+html_context = {}
+
+if not 'READTHEDOCS' in os.environ:
+    html_static_path = ['_static/']
+    html_js_files = ['debug.js']
+
+#html_logo = "_static/nvme_icon.png"
+html_show_sourcelink = True
+htmlhelp_basename = slug
+
+
+latex_documents = [
+  ('index', '{0}.tex'.format(slug), project, author, 'manual'),
+]
+
+man_pages = [
+    ('index', slug, project, [author], 1)
+]
+
+texinfo_documents = [
+  ('index', slug, project, author, slug, project, 'Miscellaneous'),
+]

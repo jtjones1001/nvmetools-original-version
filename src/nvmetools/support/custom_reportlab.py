@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------------------
-# Copyright(c) 2022 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
+# Copyright(c) 2023 Joseph Jones,  MIT License @  https://opensource.org/licenses/MIT
 # --------------------------------------------------------------------------------------
 """Custom reportlab flowables used to create PDF test reports."""
 
@@ -26,6 +26,12 @@ from reportlab.platypus import Flowable, Image, Paragraph, SimpleDocTemplate, Ta
 
 from nvmetools import RESOURCE_DIRECTORY, __brandname__, __website__
 from nvmetools.support.log import log
+
+SKIPPED = "SKIPPED"
+PASSED = "PASSED"
+FAILED = "FAILED"
+ABORTED = "ABORTED"
+STARTED = "STARTED"
 
 # ----------------------------------------------------------------------
 # customize defaults
@@ -70,7 +76,7 @@ HEADING_STYLE = ParagraphStyle(
     fontSize=14,
     leading=16,
     spaceBefore=0,
-    spaceAfter=16,
+    spaceAfter=0,  # 16
     textColor=HEADING_COLOR,
     underlineWidth=2,
     underlineOffset=6,
@@ -205,7 +211,6 @@ def convert_plot_to_image(fig, ax, ax2=None):
     else:
         actual_width = actual_x1 - actual_x0
 
-    log.debug("Making image from bytes")
     return ImageFromBytes(
         ImageReader(image_bytes),
         width=actual_width * REPORT_DPI,
@@ -213,9 +218,23 @@ def convert_plot_to_image(fig, ax, ax2=None):
     )
 
 
+from reportlab.platypus.doctemplate import PageTemplate, BaseDocTemplate
+
+# class MyDocTemplate(SimpleDocTemplate):
+class MyDocTemplate(SimpleDocTemplate):
+
+    allowSplitting = 0
+
+    def afterFlowable(self, flowable):
+
+        if flowable.__class__.__name__ == "Heading":
+            if flowable.text != "Table of Contents":
+                self.notify("TOCEntry", (0, flowable.text, self.page, flowable.text))
+
+
 def save_reportlab_report(filepath, elements, drive="N/A", add_header_footer=True):
 
-    pdf = SimpleDocTemplate(
+    pdf = MyDocTemplate(
         filepath,
         rightMargin=H_MARGIN,
         leftMargin=H_MARGIN,
@@ -225,10 +244,10 @@ def save_reportlab_report(filepath, elements, drive="N/A", add_header_footer=Tru
     )
 
     if add_header_footer:
-        pdf.build(elements, onLaterPages=functools.partial(_add_header_footer, drive_name=drive))
+        pdf.multiBuild(elements, onLaterPages=functools.partial(_add_header_footer, drive_name=drive))
 
     else:
-        pdf.build(elements)
+        pdf.multiBuild(elements)
 
 
 class ImageFromBytes(Flowable):
@@ -271,7 +290,7 @@ class Heading(Flowable):
         Flowable.__init__(self)
         self.text = text
         self.width = USABLE_WIDTH
-        self.height = HEADING_STYLE.fontSize + HEADING_STYLE.spaceAfter + HEADING_STYLE.spaceBefore
+        self.height = 14  # HEADING_STYLE.fontSize + HEADING_STYLE.spaceAfter + HEADING_STYLE.spaceBefore
 
     def draw(self):
         """Draw the heading on the canvas."""
@@ -282,9 +301,13 @@ class Heading(Flowable):
             HEADING_STYLE.fontSize,
             HEADING_STYLE.leading,
         )
-        self.canv.drawString(0, HEADING_STYLE.spaceAfter, self.text.upper())
+        #   self.canv.drawString(0, HEADING_STYLE.spaceAfter, self.text.upper())
 
         line_y_value = HEADING_STYLE.spaceAfter - HEADING_STYLE.underlineOffset
+        line_y_value = 8
+
+        self.canv.bookmarkPage(self.text)
+        self.canv.addOutlineEntry(self.text, self.text, 0, 0)
 
         self.canv.setStrokeColor(HEADING_STYLE.textColor)
         self.canv.setLineWidth(HEADING_STYLE.underlineWidth)
@@ -295,7 +318,7 @@ class Heading(Flowable):
 class ResultDonut:
     """Create donut pie chart with number of passes and fails."""
 
-    def __init__(self, passed, failed, result, size=1):
+    def __init__(self, passed, failed, result, skipped=0, size=1):
         """Create the donut pie chart."""
         fig, ax = plt.subplots(
             figsize=(size, size),
@@ -309,17 +332,17 @@ class ResultDonut:
             },
             subplot_kw={"xmargin": 0.05, "ymargin": 0.05, "aspect": "equal"},
         )
-        skipped = 0
+        # skipped = 0
         aborted = 0
-        if result == "aborted":
+        if result == ABORTED:
             result_label = "N/A"
             text_color = FAIL_COLOR
             aborted = 1
             passed = 0
             failed = 0
-        elif result == "skipped":
+        elif result == SKIPPED:
             result_label = "N/A"
-            text_color = FAIL_COLOR
+            text_color = SKIP_COLOR
             skipped = 1
             passed = 0
             failed = 0
@@ -332,9 +355,10 @@ class ResultDonut:
 
         ax.pie(
             [passed, failed, aborted, skipped],
-            colors=[PASS_COLOR, FAIL_COLOR, FAIL_COLOR, FAIL_COLOR],
+            colors=[PASS_COLOR, FAIL_COLOR, FAIL_COLOR, SKIP_COLOR],
             wedgeprops={"width": 0.5},
             startangle=90,
+            counterclock=False,
         )
         ax.axis("equal")  # Set the equal axis after the pie chart is created
 
@@ -360,12 +384,31 @@ class TestResult(Flowable):
     _VERTICAL_LINE_MARGIN = 12
     _FONT_SPACING = 8
 
-    def __init__(self, test_data):
+    def __init__(self, test_data, data_type="verifications"):
         """Initialilze the flowable."""
         Flowable.__init__(self)
-        self.total_req = test_data["requirements"]["total requirements"]
-        self.pass_req = test_data["requirements"]["pass requirements"]
-        self.fail_req = test_data["requirements"]["fail requirements"]
+
+        if data_type == "tests":
+            self._header = "TESTS"
+            self._total = test_data["summary"]["tests"]["total"]
+            self._pass = test_data["summary"]["tests"]["pass"]
+            self._fail = test_data["summary"]["tests"]["fail"]
+            self._skip = test_data["summary"]["tests"]["skip"]
+
+        elif data_type == "requirements":
+            self._header = "REQUIREMENTS"
+            self._total = test_data["summary"]["rqmts"]["total"]
+            self._pass = test_data["summary"]["rqmts"]["pass"]
+            self._fail = test_data["summary"]["rqmts"]["fail"]
+            self._skip = 0
+        else:
+            self._header = "VERIFICATIONS"
+            self._total = test_data["summary"]["verifications"]["total"]
+            self._pass = test_data["summary"]["verifications"]["pass"]
+            self._fail = test_data["summary"]["verifications"]["fail"]
+            self._skip = 0
+
+        self.data_type = data_type
         self.result = test_data["result"]
         self.width = USABLE_WIDTH
         self.height = TestResult._IMAGE_SIZE + TestResult._SPACE_BELOW
@@ -374,8 +417,8 @@ class TestResult(Flowable):
         """Draw on the canvas."""
         self.canv.saveState()
 
-        if (self.pass_req + self.fail_req > 0) or self.result == "aborted" or self.result == "skipped":
-            donut_chart_image = ResultDonut(self.pass_req, self.fail_req, self.result).image
+        if (self._pass + self._fail > 0) or self.result == ABORTED or self.result == SKIPPED:
+            donut_chart_image = ResultDonut(self._pass, self._fail, self.result, skipped=self._skip).image
             donut_chart_image.drawOn(self.canv, 0, TestResult._SPACE_BELOW)
 
         x1 = TestResult._IMAGE_SIZE + 36  # vertical line
@@ -393,33 +436,54 @@ class TestResult(Flowable):
 
         # draw the requirements section
 
-        y1 = self.height / 2 + 7 + TEXT_FONT_SIZE / 2 + 8
-        y2 = self.height / 2 - TEXT_FONT_SIZE / 2 + 8
-        y3 = y2 - 7 - TEXT_FONT_SIZE
+        if self.data_type == "tests":
+            y1 = self.height / 2 + 13 + TEXT_FONT_SIZE / 2 + 8
+            y2 = y1 - 7 - TEXT_FONT_SIZE
+            y3 = y2 - 7 - TEXT_FONT_SIZE
+            y4 = y3 - 7 - TEXT_FONT_SIZE
+
+        else:
+            y1 = self.height / 2 + 7 + TEXT_FONT_SIZE / 2 + 8
+            y2 = self.height / 2 - TEXT_FONT_SIZE / 2 + 8
+            y3 = y2 - 7 - TEXT_FONT_SIZE
 
         self.canv.setFillColor(HEADING_COLOR)
 
         self.canv.setFont("Helvetica-Bold", TEXT_FONT_SIZE)
-        self.canv.drawString(x2, y1, "REQUIREMENTS")
-        self.canv.drawRightString(x3, y1, f"{self.total_req}")
+        self.canv.drawString(x2, y1, self._header)
+
+        self.canv.drawRightString(x3, y1, f"{self._total}")
         self.canv.setFillColor(PASS_COLOR)
-        self.canv.drawString(x2, y2, "PASSED")
-        self.canv.drawRightString(x3, y2, f"{self.pass_req}")
-        if self.total_req == 0:
+        self.canv.drawString(x2, y2, "PASS")
+        self.canv.drawRightString(x3, y2, f"{self._pass}")
+        if self._total == 0:
             pct = 0
         else:
-            pct = self.pass_req / (self.total_req) * 100
+            pct = self._pass / (self._total) * 100
         self.canv.drawRightString(x4, y2, f"{pct:0.1f}%")
         self.canv.setFillColor(FAIL_COLOR)
-        self.canv.drawString(x2, y3, "FAILED")
-        self.canv.drawRightString(x3, y3, f"{self.fail_req}")
+        self.canv.drawString(x2, y3, "FAIL")
+        self.canv.drawRightString(x3, y3, f"{self._fail}")
 
-        if self.total_req == 0:
+        if self._total == 0:
             pct = 0
         else:
-            pct = self.fail_req / (self.total_req) * 100
+            pct = self._fail / (self._total) * 100
 
         self.canv.drawRightString(x4, y3, f"{pct:0.1f}%")
+
+        if self.data_type == "tests":
+            self.canv.setFillColor(SKIP_COLOR)
+            self.canv.drawString(x2, y4, "SKIP")
+            self.canv.drawRightString(x3, y4, f"{self._skip}")
+
+            if self._total == 0:
+                pct = 0
+            else:
+                pct = self._skip / (self._total) * 100
+
+            self.canv.drawRightString(x4, y4, f"{pct:0.1f}%")
+
         self.canv.restoreState()
 
 
@@ -580,7 +644,7 @@ class TitlePage(Flowable):
     _DESCRIPTION_X_END = 108
     _description_y_start = 8 * 72 - 16
 
-    def __init__(self, drive_info: str, title: str, report_description: str, date: str):
+    def __init__(self, drive_info, title, report_description, date):
         """Initialize the flowable."""
         Flowable.__init__(self)
         self.width = USABLE_WIDTH
@@ -593,6 +657,10 @@ class TitlePage(Flowable):
     def draw(self):
         """Draw on the canvas."""
         self.canv.saveState()
+
+        self.canv.setViewerPreference("FitWindow", "true")
+        self.canv.showOutline()
+
         self.canv.setAuthor(__brandname__)
         self.canv.setTitle(self.title)
         self.canv.setSubject("NVMe Report")

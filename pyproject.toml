@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nvmetools"
-version = "0.2.1"
+version = "0.3.13"
 description = "Basic tools for working with NVMe SSD on Windows or Linux"
 readme = "README.md"
-authors = [{ name = "Joe Jones", email = "joe@epicutils.com" }]
+authors = [{ name = "Joe Jones", email = "joejones@chargetrap.com" }]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: POSIX :: Linux",
@@ -22,7 +22,7 @@ dependencies = [
     "reportlab",
     "cycler"
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 
 [project.optional-dependencies]
 dev = ["black", "flake8", "pytest"]
@@ -36,7 +36,8 @@ Documentation = "https://nvmetools.readthedocs.io/en/latest/"
 readnvme = "nvmetools.console.readnvme:main"
 checknvme = "nvmetools.console.checknvme:main"
 listnvme = "nvmetools.console.listnvme:main"
-setupnvme = "nvmetools.console.setupnvme:main"
+testnvme = "nvmetools.console.testnvme:main"
+updatenvme= "nvmetools.console.updatenvme:main"
 
 [tool.black]
 line-length = 115
@@ -67,11 +68,11 @@ show_source = true
 
 [tool.flakeheaven.plugins]
 pyflakes = ["+*", "-F401"]
-flake8-bandit = ["+*","-S404","-S603","-S602"] # Use subprocess
+flake8-bandit = ["+*","-S404","-S603","-S602","-S311"] # Use subprocess
 flake8-bugbear =  ["+*"]
-flake8-annotations = ["+*","-ANN101"] # self doesn't need type annotation
-flake8-docstrings = ["+*"]
-pep8-naming = ["+*"]
+flake8-annotations = ["-*"] # self doesn't need type annotation
+flake8-docstrings = ["-*"]
+pep8-naming = ["+*","-N806","-N818"]
 flake8-builtins = ["+*"]
 flake8-isort = ["-*"]
 flake8-eradicate = ["+*"]

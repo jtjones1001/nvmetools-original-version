@@ -739,23 +739,3 @@ nvmetools online documentation can be found on Read The Docs.
 [Online Documentation](https://nvmetools.readthedocs.io/en/latest/)
 
 <br/><br/>
-
-## Future expansion
-
-This section lists possible expansions that have been implemented as proof of concepts but not included in
-this release.  These examples provide an idea of how this package can be expanded.
-
-  * Fully automated integration test suite using nvmetools and fio. This test suite runs several functional
-  and performance tests and then creates a PDF test summary report.  Below is an example report.
-
-    [Test Report for WDC 250GB on Fedora 35](https://github.com/jtjones1001/nvmetools/blob/e4dbba5f95b5a5b621d131e6db3ea104dc51d1f3/src/nvmetools/resources/documentation/nvme_test.pdf)
-
-
-  * Integration with the TestRail test database system. The TestRail website is used to start the above
-    test suite on one or more remote computers.  When the test suite finishes the TestRail database (and
-    website) is automatically updated with the results.
-
-
-  * Integration with a file server.  When the above test suite completes all log and data files are
-    copied to a Dropbox account that acts as a file server.   The TestRail database is then updated with
-    hyperlinks to the logs and PDF report located on Dropbox.

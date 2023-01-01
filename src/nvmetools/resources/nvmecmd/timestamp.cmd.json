@@ -17,7 +17,7 @@
   "read identify controller": true,
   "read identify namespace": false,
   "read feature 01h": false,
-  "read feature 02h": false,
+  "read feature 02h": true,
   "read feature 03h": false,
   "read feature 04h": false,
   "read feature 05h": false,
